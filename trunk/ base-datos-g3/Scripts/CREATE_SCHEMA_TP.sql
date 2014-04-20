@@ -7,17 +7,17 @@ USE TP;
 DROP TABLE IF EXISTS Legislador;
 CREATE TABLE Legislador(
 	dni VARCHAR(8) NOT NULL,
-	nombre VARCHAR(20),
+	nombre VARCHAR(80),
 	fecha_nacimiento DATE,
 	id_bloque_politico INTEGER,
-	provincia VARCHAR(20),
+	provincia VARCHAR(40),
 	PRIMARY KEY (dni)
 );
 
 DROP TABLE IF EXISTS Bloque_politico;
 CREATE TABLE Bloque_politico(
 	id_bloque_politico INTEGER NOT NULL,
-	nombre VARCHAR(50),
+	nombre VARCHAR(60),
 	id_partido_politico INTEGER NOT NULL,
 	PRIMARY KEY (id_bloque_politico)
 );
@@ -25,13 +25,13 @@ CREATE TABLE Bloque_politico(
 DROP TABLE IF EXISTS Partido_politico;
 CREATE TABLE Partido_politico(
 	id_partido_politico INTEGER NOT NULL,
-	nombre VARCHAR(50),
+	nombre VARCHAR(60),
 	PRIMARY KEY (id_partido_politico)
 );
 
 DROP TABLE IF EXISTS Provincia;
 CREATE TABLE Provincia(
-	Nombre VARCHAR(20) NOT NULL,
+	Nombre VARCHAR(40) NOT NULL,
 	Habitantes INTEGER,
 	PRIMARY KEY (Nombre)
 );
@@ -59,7 +59,7 @@ CREATE TABLE Sesion(
 
 DROP TABLE IF EXISTS Comision;
 CREATE TABLE Comision(
-	nombre_comision VARCHAR(20) NOT NULL,
+	nombre_comision VARCHAR(30) NOT NULL,
 	PRIMARY KEY (nombre_comision)
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE Voto(
 
 DROP TABLE IF EXISTS Proyecto_de_ley;
 CREATE TABLE Proyecto_de_ley(
-	titulo_proyecto_ley VARCHAR(20) NOT NULL,
+	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	fecha DATE,
 	PRIMARY KEY (titulo_proyecto_ley)
 );
@@ -79,9 +79,9 @@ CREATE TABLE Proyecto_de_ley(
 DROP TABLE IF EXISTS Ley;
 CREATE TABLE Ley(
 	numeracion INTEGER NOT NULL,
-	titulo_ley VARCHAR(20) NOT NULL,
+	titulo_ley VARCHAR(50) NOT NULL,
 	fecha_sancionada DATE,
-	titulo_proyecto_ley VARCHAR(20) NOT NULL,
+	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	PRIMARY KEY (numeracion,titulo_ley)
 );
 
@@ -89,13 +89,13 @@ DROP TABLE IF EXISTS Control_de_calidad;
 CREATE TABLE Control_de_calidad(
 	id_control_calidad INTEGER NOT NULL,
 	empleado VARCHAR(20),
-	titulo_proyecto_ley VARCHAR(20) NOT NULL,
+	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	PRIMARY KEY (id_control_calidad)
 );
 
 DROP TABLE IF EXISTS Vicepresidente;
 CREATE TABLE Vicepresidente(
-	nombre_vicepresidente VARCHAR(20) NOT NULL,
+	nombre_vicepresidente VARCHAR(80) NOT NULL,
 	PRIMARY KEY (nombre_vicepresidente)
 );
 
@@ -137,14 +137,14 @@ CREATE TABLE Participa_en_comision(
 	dni_legislador VARCHAR(8) NOT NULL, 
 	fecha_inicio_participacion DATE NOT NULL, 
 	fecha_fin_participacion DATE NOT NULL,
-	nombre_comision VARCHAR(20) NOT NULL, 
+	nombre_comision VARCHAR(30) NOT NULL, 
 	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
 );
 
 DROP TABLE IF EXISTS Estudia;
 CREATE TABLE Estudia(
-	nombre_comision VARCHAR(20) NOT NULL, 
-	titulo_proyecto_ley VARCHAR(20) NOT NULL,
+	nombre_comision VARCHAR(30) NOT NULL, 
+	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	PRIMARY KEY (nombre_comision, titulo_proyecto_ley)
 );
 
