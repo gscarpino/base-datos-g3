@@ -271,7 +271,7 @@ ALTER TABLE Preside_camara_senadores
 	
 ALTER TABLE Votan
 	ADD CONSTRAINT `fk_votan_leg`
-	FOREIGN KEY (dni_diputado)
+	FOREIGN KEY (dni)
 		REFERENCES Legislador (dni),
 
 	ADD CONSTRAINT `fk_votan_voto`
