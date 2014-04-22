@@ -235,7 +235,7 @@ ALTER TABLE Preside_bloque
 		
 	ADD CONSTRAINT `fk_preside_bloque_bloquepolitico`
 	FOREIGN KEY (id_bloque_politico)
-		REFERENCES Bloque_politico (id_bloque_politico),
+		REFERENCES Bloque_politico (id_bloque_politico);
 		
 ALTER TABLE	Estudia
 	ADD CONSTRAINT `fk_estudia_comision`
