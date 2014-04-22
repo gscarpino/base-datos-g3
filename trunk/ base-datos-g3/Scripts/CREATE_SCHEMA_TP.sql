@@ -4,17 +4,22 @@ USE TP;
 
 -- Tablas
 
-DROP TABLE IF EXISTS Legislador;
 CREATE TABLE Legislador(
 	dni VARCHAR(8) NOT NULL,
 	nombre VARCHAR(80),
 	fecha_nacimiento DATE,
 	id_bloque_politico INTEGER,
 	provincia VARCHAR(40),
+	tipo CHAR(1),
 	PRIMARY KEY (dni)
 );
 
-DROP TABLE IF EXISTS Bloque_politico;
+CREATE TABLE Camara(
+	id_camara INTEGER,
+	tipo CHAR(1),
+	PRIMARY KEY (id_camara)
+);
+
 CREATE TABLE Bloque_politico(
 	id_bloque_politico INTEGER NOT NULL,
 	nombre VARCHAR(60),
@@ -22,61 +27,56 @@ CREATE TABLE Bloque_politico(
 	PRIMARY KEY (id_bloque_politico)
 );
 
-DROP TABLE IF EXISTS Partido_politico;
 CREATE TABLE Partido_politico(
 	id_partido_politico INTEGER NOT NULL,
 	nombre VARCHAR(60),
 	PRIMARY KEY (id_partido_politico)
 );
 
-DROP TABLE IF EXISTS Provincia;
 CREATE TABLE Provincia(
-	Nombre VARCHAR(40) NOT NULL,
-	Habitantes INTEGER,
+	nombre VARCHAR(40) NOT NULL,
+	habitantes INTEGER,
 	PRIMARY KEY (Nombre)
 );
 
-DROP TABLE IF EXISTS Bien_economico;
 CREATE TABLE Bien_economico(
 	id_bien_economico INTEGER NOT NULL,
-	Valor INTEGER,
+	valor INTEGER,
 	PRIMARY KEY (id_bien_economico)
 );
 
-DROP TABLE IF EXISTS Periodo;
 CREATE TABLE Periodo(
 	fecha_inicio DATE,
 	fecha_fin DATE,
 	PRIMARY KEY (fecha_inicio, fecha_fin)
 );
 
-DROP TABLE IF EXISTS Sesion;
 CREATE TABLE Sesion(
 	fecha_inicio_sesion DATE NOT NULL,
 	fecha_fin_sesion DATE NOT NULL,
+	tipo CHAR(1),
 	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion)
 );
 
-DROP TABLE IF EXISTS Comision;
 CREATE TABLE Comision(
 	nombre_comision VARCHAR(30) NOT NULL,
 	PRIMARY KEY (nombre_comision)
 );
 
-DROP TABLE IF EXISTS Voto;
 CREATE TABLE Voto(
 	id_voto INTEGER NOT NULL,
+	resultado CHAR(1),
+	tipo CHAR(1),
 	PRIMARY KEY (id_voto)
 );
 
-DROP TABLE IF EXISTS Proyecto_de_ley;
 CREATE TABLE Proyecto_de_ley(
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	fecha DATE,
+	id_camara INTEGER,
 	PRIMARY KEY (titulo_proyecto_ley)
 );
 
-DROP TABLE IF EXISTS Ley;
 CREATE TABLE Ley(
 	numeracion INTEGER NOT NULL,
 	titulo_ley VARCHAR(50) NOT NULL,
@@ -85,7 +85,6 @@ CREATE TABLE Ley(
 	PRIMARY KEY (numeracion,titulo_ley)
 );
 
-DROP TABLE IF EXISTS Control_de_calidad;
 CREATE TABLE Control_de_calidad(
 	id_control_calidad INTEGER NOT NULL,
 	empleado VARCHAR(20),
@@ -93,21 +92,15 @@ CREATE TABLE Control_de_calidad(
 	PRIMARY KEY (id_control_calidad)
 );
 
-DROP TABLE IF EXISTS Vicepresidente;
 CREATE TABLE Vicepresidente(
-	nombre_vicepresidente VARCHAR(80) NOT NULL,
-	PRIMARY KEY (nombre_vicepresidente)
+	dni VARCHAR(8) NOT NULL,
+	nombre VARCHAR(80) NOT NULL,
+	PRIMARY KEY (dni)
 );
-
-
-
-
-
 
 
 -- Tablas de relaciones N:M
 
-DROP TABLE IF EXISTS Bienes_de_legislador;
 CREATE TABLE Bienes_de_legislador(
 	dni_legislador VARCHAR(8) NOT NULL,
 	id_bien_economico INTEGER NOT NULL,
@@ -116,7 +109,6 @@ CREATE TABLE Bienes_de_legislador(
 	PRIMARY KEY (dni_legislador, id_bien_economico, fecha_obtencion)
 );
 
-DROP TABLE IF EXISTS Periodos_del_legislador;
 CREATE TABLE Periodos_del_legislador(
 	dni_legislador VARCHAR(8) NOT NULL,
 	fecha_inicio DATE NOT NULL, 
@@ -124,7 +116,6 @@ CREATE TABLE Periodos_del_legislador(
 	PRIMARY KEY (dni_legislador, fecha_inicio, fecha_fin)
 );
 
-DROP TABLE IF EXISTS Asiste_sesion;
 CREATE TABLE Asiste_sesion(
 	dni_legislador VARCHAR(8) NOT NULL,  -- debo poner la fk
 	fecha_inicio_sesion DATE NOT NULL, 
@@ -132,7 +123,6 @@ CREATE TABLE Asiste_sesion(
 	PRIMARY KEY (dni_legislador, fecha_inicio_sesion, fecha_fin_sesion)
 );
 
-DROP TABLE IF EXISTS Participa_en_comision;
 CREATE TABLE Participa_en_comision(
 	dni_legislador VARCHAR(8) NOT NULL, 
 	fecha_inicio_participacion DATE NOT NULL, 
@@ -141,24 +131,31 @@ CREATE TABLE Participa_en_comision(
 	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
 );
 
-DROP TABLE IF EXISTS Estudia;
 CREATE TABLE Estudia(
 	nombre_comision VARCHAR(30) NOT NULL, 
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	PRIMARY KEY (nombre_comision, titulo_proyecto_ley)
 );
 
+CREATE TABLE Preside_comision(
+	nombre_comision VARCHAR(30) NOT NULL, 
+	dni_diputado VARCHAR(8) NOT NULL, 
+	PRIMARY KEY (nombre_comision, dni_diputado)
+);
 
-
+CREATE TABLE Preside_camara_senadores(
+	id_camara INTEGER NOT NULL, 
+	dni_presidente VARCHAR(8) NOT NULL, 
+	PRIMARY KEY (id_camara, dni_presidente)
+);
 
 -- Foreign keys
 
 ALTER TABLE Legislador 
 	ADD CONSTRAINT `fk_bloque_politico`
 	FOREIGN KEY (id_bloque_politico)
-		REFERENCES Bloque_politico (id_bloque_politico);
+		REFERENCES Bloque_politico (id_bloque_politico),
 
-ALTER TABLE Legislador
 	ADD CONSTRAINT `fk_provincia`
 	FOREIGN KEY (provincia)
 		REFERENCES Provincia (nombre);
@@ -223,7 +220,40 @@ ALTER TABLE	Estudia
 	FOREIGN KEY (titulo_proyecto_ley)
 		REFERENCES Proyecto_de_ley (titulo_proyecto_ley);
 
+ALTER TABLE	Preside_comision
+	ADD CONSTRAINT `fk_comision_presidida`
+	FOREIGN KEY (nombre_comision)
+		REFERENCES Comision(nombre_comision),
+	
+	ADD CONSTRAINT `fk_diputado_presidente`
+	FOREIGN KEY (dni_diputado)
+		REFERENCES Legislador (dni);
 
+ALTER TABLE	Proyecto_de_ley
+	ADD CONSTRAINT `fk_camara_originaria`
+	FOREIGN KEY (id_camara)
+		REFERENCES Camara(id_camara);		
+
+ALTER TABLE Preside_camara_senadores 
+	ADD CONSTRAINT `fk_camara`
+	FOREIGN KEY (id_camara)
+		REFERENCES Camara (id_camara),
+
+	ADD CONSTRAINT `fk_dni_presidente`
+	FOREIGN KEY (dni_presidente)
+		REFERENCES Vicepresidente (dni);
 
 -- Check constraints
 
+ALTER TABLE Legislador
+	ADD CONSTRAINT `check_tipo_legislador` CHECK (tipo in ('S','D'));
+	
+ALTER TABLE Voto
+	ADD CONSTRAINT `check_resultado_voto` CHECK (resultado in ('P','N','A')),
+	ADD CONSTRAINT `check_resultado_voto` CHECK (tipo in ('E','N'));
+
+ALTER TABLE Sesion
+	ADD CONSTRAINT `check_tipo_sesion` CHECK (tipo in ('P','O','E'));
+
+ALTER TABLE Camara
+	ADD CONSTRAINT `check_tipo_camara` CHECK (tipo in('S','D'));
