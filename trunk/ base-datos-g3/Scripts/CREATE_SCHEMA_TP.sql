@@ -158,6 +158,14 @@ CREATE TABLE Preside_camara_senadores(
 	PRIMARY KEY (id_camara, dni_presidente)
 );
 
+CREATE TABLE Votan(
+	dni VARCHAR(8) NOT NULL,
+	id_voto INTEGER NOT NULL,
+	titulo_proyecto_ley VARCHAR(50) NOT NULL,
+	PRIMARY KEY (dni,titulo_proyecto_ley)
+);
+
+
 -- Foreign keys
 
 ALTER TABLE Legislador 
@@ -260,6 +268,23 @@ ALTER TABLE Preside_camara_senadores
 	ADD CONSTRAINT `fk_dni_presidente`
 	FOREIGN KEY (dni_presidente)
 		REFERENCES Vicepresidente (dni);
+	
+ALTER TABLE Votan
+	ADD CONSTRAINT `fk_votan_leg`
+	FOREIGN KEY (dni_diputado)
+		REFERENCES Legislador (dni),
+
+	ADD CONSTRAINT `fk_votan_voto`
+	FOREIGN KEY (id_voto)
+		REFERENCES Voto (id_voto),
+	
+	ADD CONSTRAINT `fk_votan_proyecto_ley`
+	FOREIGN KEY (titulo_proyecto_ley )
+		REFERENCES Proyecto_de_ley (titulo_proyecto_ley );
+			
+
+			
+		
 
 -- Check constraints
 
