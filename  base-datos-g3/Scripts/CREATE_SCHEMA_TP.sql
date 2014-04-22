@@ -131,6 +131,15 @@ CREATE TABLE Participa_en_comision(
 	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
 );
 
+CREATE TABLE Preside_bloque(
+	dni_legislador VARCHAR(8) NOT NULL,
+	fecha_inicio_presidencia_bloque DATE NOT NULL, 
+	fecha_fin_presidencia_bloque DATE NOT NULL,
+	id_bloque_politico INTEGER NOT NULL,
+	PRIMARY KEY (dni_legislador, fecha_inicio_presidencia_bloque, fecha_fin_presidencia_bloque,id_bloque_politico )
+);
+
+
 CREATE TABLE Estudia(
 	nombre_comision VARCHAR(30) NOT NULL, 
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
@@ -210,7 +219,16 @@ ALTER TABLE	Participa_en_comision
 	ADD CONSTRAINT `fk_participa_comision`
 	FOREIGN KEY (nombre_comision)
 		REFERENCES Comision (nombre_comision);
-
+		
+ALTER TABLE Preside_bloque
+	ADD CONSTRAINT `fk_preside_bloque_legislador`
+	FOREIGN KEY (dni_legislador)
+		REFERENCES Legislador (dni),
+		
+	ADD CONSTRAINT `fk_preside_bloque_bloquepolitico`
+	FOREIGN KEY (id_bloque_politico)
+		REFERENCES Bloque_politico (id_bloque_politico),
+		
 ALTER TABLE	Estudia
 	ADD CONSTRAINT `fk_estudia_comision`
 	FOREIGN KEY (nombre_comision)
