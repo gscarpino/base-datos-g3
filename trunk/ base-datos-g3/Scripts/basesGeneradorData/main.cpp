@@ -38,6 +38,7 @@ void insertarVoto();
 void insertarEstudia();
 void insertarPresideBloque();
 void insertarSesiones();
+void insertarVotos();
 
 bool dniValido(string dni);
 string getDNI(string d);
@@ -45,6 +46,7 @@ string getNombre(string d);
 string fechaAzar(unsigned int minAnio, unsigned int maxAnio);
 unsigned int bloqueSenadoresAzar(unsigned int it, unsigned int cantBloques);
 unsigned int bloqueDiputadosAzar(unsigned int it, unsigned int cantBloques);
+void insertarSesiones();
 
 
 set<string> conjDNI;
@@ -59,16 +61,17 @@ int main(){
     insertarPartidoPolitico(CANT_PARTIDOS);
     insertarBloquePolitico(CANT_PARTIDOS);
     insertarLegislador();
+    insertarVice();
     insertarCamaras();
     insertarBienes();
     insertarPeriodo();
     insertarPartEnComisiones();
-    insertarVice();
     insertarProyectos();
     insertarVoto();
     insertarEstudia();
     insertarPresideBloque();
-    cout << "Termino" << endl;
+    insertarSesiones();
+    insertarVotos();
     return 0;
 }
 
@@ -237,7 +240,16 @@ unsigned int bloqueDiputadosAzar(unsigned int it, unsigned int cantBloques){
 
 void insertarCamaras(){
     string query;
-    query = string("insert into Camara (id_camara,tipo) values (0,'D'), (1,'S');");
+    unsigned int cont = 0;
+    string PresiDipu;
+    for(set<pair<string, string> >::iterator it = conjDipu.begin(); it != conjDipu.end(); it++){
+        if(cont > conjDipu.size()){
+            PresiDipu = getDNI((*it).first);
+            break;
+        }
+        cont++;
+    }
+    query = string("insert into Camara (id_camara,tipo,dni_presidente) values (0,'D','") + PresiDipu + string("'), (1,'S','11222333');");
     cout << query << endl;
 }
 
@@ -362,7 +374,7 @@ void insertarPresideBloque(){
     string query;
     unsigned int bloque = 2;
     for(set<string>::iterator it = conjSen.begin(); it != conjSen.end(); it++){
-        query = string("insert into Preside_bloque (dni_legislador,fecha_inicio_presidencia_bloque,fecha_fin_presidencia_bloque,id_bloque_politico) values ('") + getDNI(*it) + string("',2008-01-01','2012-12-31',") + intToStr(bloque) + string(");");
+        query = string("insert into Preside_bloque (dni_legislador,fecha_inicio_presidencia_bloque,fecha_fin_presidencia_bloque,id_bloque_politico) values ('") + getDNI(*it) + string("','2008-01-01','2012-12-31',") + intToStr(bloque) + string(");");
         cout << query << endl;
         bloque = bloque + 2;
         if(bloque > 12) break;
@@ -370,10 +382,165 @@ void insertarPresideBloque(){
 
     bloque = 1;
     for(set<pair<string,string> >::iterator it = conjDipu.begin(); it != conjDipu.end(); it++){
-        query = string("insert into Preside_bloque (dni_legislador,fecha_inicio_presidencia_bloque,fecha_fin_presidencia_bloque,id_bloque_politico) values ('") + getDNI((*it).first) + string("',2008-01-01','2012-12-31',") + intToStr(bloque) + string(");");
+        query = string("insert into Preside_bloque (dni_legislador,fecha_inicio_presidencia_bloque,fecha_fin_presidencia_bloque,id_bloque_politico) values ('") + getDNI((*it).first) + string("','2008-01-01','2012-12-31',") + intToStr(bloque) + string(");");
         cout << query << endl;
         bloque = bloque + 2;
         if(bloque > 11) break;
     }
 }
 
+void insertarSesiones(){
+    string query;
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-03-02','2008-03-03','P','S');");
+    cout << query << endl;
+
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-03-03','2008-03-04','P','D');");
+    cout << query << endl;
+
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-04-01','2008-04-01','O','S');");
+    cout << query << endl;
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-03-27','2008-03-27','O','D');");
+    cout << query << endl;
+
+
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-06-25','2008-06-26','O','S');");
+    cout << query << endl;
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-07-02','2008-07-04','O','D');");
+    cout << query << endl;
+
+
+    query = string("insert into Sesion (fecha_inicio_sesion,fecha_fin_sesion,tipo,camara) values ('2008-12-01','2008-12-02','E','S');");
+    cout << query << endl;
+}
+
+void insertarVotos(){
+    string query;
+
+    //Senadores
+    for(set<string>::iterator it = conjSen.begin(); it != conjSen.end(); it++){
+
+        query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI(*it) + string("','2008-03-02','2008-03-03');");
+        cout << query << endl;
+
+        if(rand()%100 >= 99){
+            continue;
+        }
+        else{
+            //asistio a la sesion y voto
+            query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI(*it) + string("','2008-04-01','2008-04-01');");
+            cout << query << endl;
+
+            if(rand()%100 >= 20){
+                //voto a favor
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI(*it) + string("',00,'Proyecto1','2008-04-01');");
+                cout << query << endl;
+            }
+            else{
+                //voto negativo
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI(*it) + string("',10,'Proyecto1','2008-04-01');");
+                cout << query << endl;
+            }
+
+        }
+
+        if(rand()%100 >= 99){
+            continue;
+        }
+        else{
+            //asistio a la sesion y voto
+            query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI(*it) + string("','2008-06-25','2008-06-26');");
+            cout << query << endl;
+
+            if(rand()%100 >= 90){
+                //voto a favor
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI(*it) + string("',01,'Proyecto2','2008-06-26');");
+                cout << query << endl;
+            }
+            else{
+                //voto negativo
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI(*it) + string("',11,'Proyecto2','2008-06-26');");
+                cout << query << endl;
+            }
+
+        }
+
+        if(rand()%100 >= 99){
+            continue;
+        }
+        else{
+            //asistio a la sesion y voto
+            query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI(*it) + string("','2008-12-01','2008-12-02');");
+            cout << query << endl;
+
+            if(rand()%100 >= 50){
+                //voto a favor
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI(*it) + string("',01,'Proyecto3','2008-12-02');");
+                cout << query << endl;
+            }
+            else{
+                //voto negativo
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI(*it) + string("',11,'Proyecto3','2008-12-02');");
+                cout << query << endl;
+            }
+
+        }
+    }
+
+    //Diputados
+    for(set<pair<string,string> >::iterator it = conjDipu.begin(); it != conjDipu.end(); it++){
+
+        query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI((*it).first) + string("','2008-03-03','2008-03-04');");
+        cout << query << endl;
+
+        if(rand()%100 >= 99){
+            continue;
+        }
+        else{
+            //asistio a la sesion y voto
+            query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI((*it).first) + string("','2008-03-27','2008-03-27');");
+            cout << query << endl;
+
+            if(rand()%100 >= 20){
+                //voto a favor
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI((*it).first) + string("',00,'Proyecto1','2008-03-27');");
+                cout << query << endl;
+            }
+            else{
+                //voto negativo
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI((*it).first) + string("',10,'Proyecto1','2008-03-27');");
+                cout << query << endl;
+            }
+
+        }
+
+        if(rand()%100 >= 99){
+            continue;
+        }
+        else{
+            //asistio a la sesion y voto
+            query = string("insert into Asiste_sesion (dni_legislador,fecha_inicio_sesion,fecha_fin_sesion) values ('") + getDNI((*it).first) + string("','2008-07-02','2008-07-04');");
+            cout << query << endl;
+
+            if(rand()%100 >= 90){
+                //voto a favor
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI((*it).first) + string("',01,'Proyecto2','2008-07-04');");
+                cout << query << endl;
+            }
+            else{
+                //voto negativo
+                query = string("insert into Votan (dni, id_voto,titulo_proyecto_ley,fecha) values ('") + getDNI((*it).first) + string("',11,'Proyecto2','2008-07-04');");
+                cout << query << endl;
+            }
+
+        }
+
+    }
+
+    //Se ha votado Proyectos 1 y 2 y medio del 3
+    query = string("update Proyecto_de_ley set estado_votaciones = 'C' where titulo_proyecto_ley = 'Proyecto1';");
+    cout << query << endl;
+    query = string("update Proyecto_de_ley set estado_votaciones = 'C' where titulo_proyecto_ley = 'Proyecto2';");
+    cout << query << endl;
+    query = string("update Proyecto_de_ley set estado_votaciones = 'M' where titulo_proyecto_ley = 'Proyecto3';");
+    cout << query << endl;
+}

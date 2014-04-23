@@ -12,11 +12,11 @@ CREATE TRIGGER convertir_proyecto_en_ley AFTER UPDATE ON Proyecto_de_ley
 			SET votos_positivos = ( SELECT count(1) 
 									  FROM Votan v
 									 WHERE v.titulo_proyecto_ley = NEW.titulo_proyecto_ley
-									   AND v.resultado = 'P');
+									   AND (v.id_voto = 0 OR v.id_voto = 1));
 			SET votos_negativos = ( SELECT count(1) 
 									  FROM Votan v
 									 WHERE v.titulo_proyecto_ley = NEW.titulo_proyecto_ley
-									   AND v.resultado = 'N');
+									   AND (v.id_voto = 10 OR v.id_voto = 11));
 			
 			IF votos_positivos > votos_negativos
 			THEN
