@@ -1,4 +1,22 @@
+
+
 -- Diputados que solo votaron positivo o ausente en los proyectos de ley de la comisión que integran
+-- dni de diputados que votaron positivo en todos los proyectos de ley de las comisiones que integra.
+SELECT votos.dni 
+	FROM Votan votos
+	WHERE 
+		(SELECT e.titulo_proyecto_ley
+			FROM Estudia e
+			WHERE votos.titulo_proyecto_ley = e.titulo_proyecto_ley AND votos.dni IN (SELECT pec.dni_legislador
+																						FROM Participa_en_comision pec 
+																						WHERE pec.nombre_comision= e.nombre_comision)
+																						AND votos.id_voto IN (SELECT v.id_voto
+																												FROM  Voto v
+																												WHERE tipo LIKE 'P%'));
+	
+	
+	
+	
 	
 -- Cantidad de leyes promulgadas en cada sesión en los últimos tres años
 	-- | sesión | cantidad de leyes promulgadas|
