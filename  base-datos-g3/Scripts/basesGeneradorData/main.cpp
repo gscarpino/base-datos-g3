@@ -311,6 +311,7 @@ void insertarPartEnComisiones(){
             cantPresidencias++;
         }
         for(unsigned int c = 1; c <= CANT_COMISIONES; c++){
+            if(c == comision+1) continue;
             if(rand()%100 > 97){
                 query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,nombre_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31','Comision") + intToStr(c) + string("');");
                 cout << query << endl;

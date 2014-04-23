@@ -130,7 +130,7 @@ CREATE TABLE Participa_en_comision(
 	fecha_inicio_participacion DATE NOT NULL, 
 	fecha_fin_participacion DATE NOT NULL,
 	nombre_comision VARCHAR(30) NOT NULL, 
-	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
+	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion,nombre_comision)
 );
 
 CREATE TABLE Preside_bloque(
@@ -311,9 +311,3 @@ ALTER TABLE Proyecto_de_ley
 	
 ALTER TABLE Bienes_del_legislador
 	ADD CONSTRAINT `check_tipo_bien` CHECK (tipo in('A','S','I'));
-	
-
-
-
-	
-	
