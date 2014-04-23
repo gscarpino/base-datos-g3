@@ -151,7 +151,9 @@ CREATE TABLE Estudia(
 CREATE TABLE Preside_comision(
 	nombre_comision VARCHAR(30) NOT NULL, 
 	dni_diputado VARCHAR(8) NOT NULL, 
-	PRIMARY KEY (nombre_comision, dni_diputado)
+	fecha_inicio_preside DATE NOT NULL, 
+	fecha_fin_preside DATE NOT NULL,
+	PRIMARY KEY (nombre_comision, dni_diputado,fecha_inicio_preside,fecha_fin_preside)
 );
 
 CREATE TABLE Preside_camara_senadores(
@@ -164,6 +166,7 @@ CREATE TABLE Votan(
 	dni VARCHAR(8) NOT NULL,
 	id_voto INTEGER NOT NULL,
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
+	fecha DATE NOT NULL,	
 	PRIMARY KEY (dni,titulo_proyecto_ley)
 );
 
