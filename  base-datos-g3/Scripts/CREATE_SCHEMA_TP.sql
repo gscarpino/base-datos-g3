@@ -40,7 +40,7 @@ CREATE TABLE Provincia(
 );
 
 CREATE TABLE Bien_economico(
-	id_bien_economico INTEGER NOT NULL,
+	id_bien_economico INTEGER NOT NULL AUTO_INCREMENT,
 	valor INTEGER,
 	tipo CHAR(1),
 	PRIMARY KEY (id_bien_economico)
@@ -75,11 +75,12 @@ CREATE TABLE Proyecto_de_ley(
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	fecha DATE,
 	id_camara INTEGER,
+	estado_votaciones CHAR(1),
 	PRIMARY KEY (titulo_proyecto_ley)
 );
 
 CREATE TABLE Ley(
-	numeracion INTEGER NOT NULL,
+	numeracion INTEGER NOT NULL AUTO_INCREMENT,
 	titulo_ley VARCHAR(50) NOT NULL,
 	fecha_sancionada DATE,
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
@@ -301,3 +302,12 @@ ALTER TABLE Sesion
 
 ALTER TABLE Camara
 	ADD CONSTRAINT `check_tipo_camara` CHECK (tipo in('S','D'));
+
+ALTER TABLE Proyecto_de_ley
+	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('A','C'));
+	
+
+
+
+	
+	
