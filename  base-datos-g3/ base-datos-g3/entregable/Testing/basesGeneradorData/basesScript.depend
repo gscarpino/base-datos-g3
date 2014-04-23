@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1398231178 source:c:\users\gino\desktop\basesscript\main.cpp
+	<iostream>
+	<string>
+	<sstream>
+	<fstream>
+	<cmath>
+	<cstdlib>
+	<ctime>
+	<set>
+
+1398282338 source:c:\users\gino\desktop\ base-datos-g3\scripts\basesgeneradordata\main.cpp
+	<iostream>
+	<string>
+	<sstream>
+	<fstream>
+	<cmath>
+	<cstdlib>
+	<ctime>
+	<set>
+
