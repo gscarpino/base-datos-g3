@@ -39,6 +39,7 @@ void insertarEstudia();
 void insertarPresideBloque();
 void insertarSesiones();
 void insertarVotos();
+void insertarControlCalidad();
 
 bool dniValido(string dni);
 string getDNI(string d);
@@ -72,6 +73,7 @@ int main(){
     insertarPresideBloque();
     insertarSesiones();
     insertarVotos();
+    insertarControlCalidad();
     return 0;
 }
 
@@ -542,5 +544,12 @@ void insertarVotos(){
     query = string("update Proyecto_de_ley set estado_votaciones = 'C' where titulo_proyecto_ley = 'Proyecto2';");
     cout << query << endl;
     query = string("update Proyecto_de_ley set estado_votaciones = 'M' where titulo_proyecto_ley = 'Proyecto3';");
+    cout << query << endl;
+}
+
+void insertarControlCalidad(){
+    unsigned int idControl  = 1;
+    string query;
+    query = string("insert into Control_de_calidad (id_control_calidad, empleado, titulo_proyecto_ley) values (") + intToStr(idControl) + string(",'Empleado_X','Proyecto2');");
     cout << query << endl;
 }
