@@ -23,36 +23,6 @@ WHERE NOT EXISTS (SELECT e.titulo_proyecto_ley
 												FROM Participa_en_comision pec 
 												WHERE pec.dni_legislador= leg.dni));
 															 
-
-															
-CREATE TABLE Participa_en_comision(
-	dni_legislador VARCHAR(8) NOT NULL, 
-	fecha_inicio_participacion DATE NOT NULL, 
-	fecha_fin_participacion DATE NOT NULL,
-	nombre_comision VARCHAR(30) NOT NULL, 
-	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
-
-				
-				CREATE TABLE Estudia(
-	nombre_comision VARCHAR(30) NOT NULL, 
-	titulo_proyecto_ley VARCHAR(50) NOT NULL,
-	PRIMARY KEY (nombre_comision, titulo_proyecto_ley)
-);
-
-
-
-dni VARCHAR(8) NOT NULL,
-	nombre VARCHAR(80),
-	fecha_nacimiento DATE,
-	id_bloque_politico INTEGER,
-	provincia VARCHAR(40),
-	tipo CHAR(1),
-	PRIMARY KEY (dni)
-);
-	
-	
-	
-	
 -- Cantidad de leyes promulgadas en cada sesión en los últimos tres años
 	-- | sesión | cantidad de leyes promulgadas|
 
