@@ -103,7 +103,7 @@ CREATE TABLE Vicepresidente(
 
 -- Tablas de relaciones N:M
 
-CREATE TABLE Bienes_de_legislador(
+CREATE TABLE Bienes_del_legislador(
 	dni_legislador VARCHAR(8) NOT NULL,
 	id_bien_economico INTEGER NOT NULL,
 	fecha_obtencion DATE NOT NULL,
@@ -197,7 +197,7 @@ ALTER TABLE Control_de_calidad
 	FOREIGN KEY (titulo_proyecto_ley)
 		REFERENCES Proyecto_de_ley (titulo_proyecto_ley);
 
-ALTER TABLE Bienes_de_legislador
+ALTER TABLE Bienes_del_legislador
 	ADD CONSTRAINT `fk_legislador_bien`
 	FOREIGN KEY (dni_legislador)
 		REFERENCES Legislador (dni),
@@ -308,6 +308,9 @@ ALTER TABLE Camara
 
 ALTER TABLE Proyecto_de_ley
 	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('A','M','C'));
+	
+ALTER TABLE Bienes_del_legislador
+	ADD CONSTRAINT `check_tipo_bien` CHECK (tipo in('A','S','I'));
 	
 
 
