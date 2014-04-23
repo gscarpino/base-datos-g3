@@ -17,6 +17,7 @@ CREATE TABLE Legislador(
 CREATE TABLE Camara(
 	id_camara INTEGER,
 	tipo CHAR(1),
+	dni_presidente VARCHAR(8) NOT NULL,
 	PRIMARY KEY (id_camara)
 );
 
@@ -55,8 +56,9 @@ CREATE TABLE Periodo(
 CREATE TABLE Sesion(
 	fecha_inicio_sesion DATE NOT NULL,
 	fecha_fin_sesion DATE NOT NULL,
-	tipo CHAR(1),
-	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion)
+	tipo CHAR(1) NOT NULL,
+	camara CHAR(1) NOT NULL,
+	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion,camara)
 );
 
 CREATE TABLE Comision(
@@ -103,7 +105,7 @@ CREATE TABLE Vicepresidente(
 
 -- Tablas de relaciones N:M
 
-CREATE TABLE Bienes_de_legislador(
+CREATE TABLE Bienes_del_legislador(
 	dni_legislador VARCHAR(8) NOT NULL,
 	id_bien_economico INTEGER NOT NULL,
 	fecha_obtencion DATE NOT NULL,
@@ -130,7 +132,7 @@ CREATE TABLE Participa_en_comision(
 	fecha_inicio_participacion DATE NOT NULL, 
 	fecha_fin_participacion DATE NOT NULL,
 	nombre_comision VARCHAR(30) NOT NULL, 
-	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
+	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion,nombre_comision)
 );
 
 CREATE TABLE Preside_bloque(
@@ -151,7 +153,9 @@ CREATE TABLE Estudia(
 CREATE TABLE Preside_comision(
 	nombre_comision VARCHAR(30) NOT NULL, 
 	dni_diputado VARCHAR(8) NOT NULL, 
-	PRIMARY KEY (nombre_comision, dni_diputado)
+	fecha_inicio_preside DATE NOT NULL, 
+	fecha_fin_preside DATE NOT NULL,
+	PRIMARY KEY (nombre_comision, dni_diputado,fecha_inicio_preside,fecha_fin_preside)
 );
 
 CREATE TABLE Preside_camara_senadores(
@@ -164,6 +168,7 @@ CREATE TABLE Votan(
 	dni VARCHAR(8) NOT NULL,
 	id_voto INTEGER NOT NULL,
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
+	fecha DATE NOT NULL,	
 	PRIMARY KEY (dni,titulo_proyecto_ley)
 );
 
@@ -194,7 +199,7 @@ ALTER TABLE Control_de_calidad
 	FOREIGN KEY (titulo_proyecto_ley)
 		REFERENCES Proyecto_de_ley (titulo_proyecto_ley);
 
-ALTER TABLE Bienes_de_legislador
+ALTER TABLE Bienes_del_legislador
 	ADD CONSTRAINT `fk_legislador_bien`
 	FOREIGN KEY (dni_legislador)
 		REFERENCES Legislador (dni),
@@ -298,16 +303,14 @@ ALTER TABLE Voto
 	ADD CONSTRAINT `check_resultado_voto` CHECK (tipo in ('E','N'));
 
 ALTER TABLE Sesion
-	ADD CONSTRAINT `check_tipo_sesion` CHECK (tipo in ('P','O','E'));
+	ADD CONSTRAINT `check_tipo_sesion` CHECK (tipo in ('P','O','E')),
+	ADD CONSTRAINT `check_camara_sesion` CHECK (camara in ('S','D'));
 
 ALTER TABLE Camara
 	ADD CONSTRAINT `check_tipo_camara` CHECK (tipo in('S','D'));
 
 ALTER TABLE Proyecto_de_ley
-	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('A','C'));
+	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('A','M','C'));
 	
-
-
-
-	
-	
+ALTER TABLE Bienes_del_legislador
+	ADD CONSTRAINT `check_tipo_bien` CHECK (tipo in('A','S','I'));
