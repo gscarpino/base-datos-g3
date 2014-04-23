@@ -17,6 +17,7 @@ CREATE TABLE Legislador(
 CREATE TABLE Camara(
 	id_camara INTEGER,
 	tipo CHAR(1),
+	dni_presidente VARCHAR(8) NOT NULL,
 	PRIMARY KEY (id_camara)
 );
 
@@ -55,8 +56,9 @@ CREATE TABLE Periodo(
 CREATE TABLE Sesion(
 	fecha_inicio_sesion DATE NOT NULL,
 	fecha_fin_sesion DATE NOT NULL,
-	tipo CHAR(1),
-	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion)
+	tipo CHAR(1) NOT NULL,
+	camara CHAR(1) NOT NULL,
+	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion,camara)
 );
 
 CREATE TABLE Comision(
@@ -301,7 +303,8 @@ ALTER TABLE Voto
 	ADD CONSTRAINT `check_resultado_voto` CHECK (tipo in ('E','N'));
 
 ALTER TABLE Sesion
-	ADD CONSTRAINT `check_tipo_sesion` CHECK (tipo in ('P','O','E'));
+	ADD CONSTRAINT `check_tipo_sesion` CHECK (tipo in ('P','O','E')),
+	ADD CONSTRAINT `check_camara_sesion` CHECK (camara in ('S','D'));
 
 ALTER TABLE Camara
 	ADD CONSTRAINT `check_tipo_camara` CHECK (tipo in('S','D'));
