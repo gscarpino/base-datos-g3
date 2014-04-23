@@ -9,11 +9,46 @@ SELECT votos.dni
 			FROM Estudia e
 			WHERE votos.titulo_proyecto_ley = e.titulo_proyecto_ley AND votos.dni IN (SELECT pec.dni_legislador
 																						FROM Participa_en_comision pec 
-																						WHERE pec.nombre_comision= e.nombre_comision)
+																						WHERE pec.nombre_comision= e.nombre_comision
 																						AND votos.id_voto IN (SELECT v.id_voto
 																												FROM  Voto v
-																												WHERE tipo LIKE 'P%'));
-	
+																												WHERE tipo LIKE 'P%')));
+-- dni de diputados que estuvieron ausentes en todos los proyectos de ley de las comisiones que integra.	
+--diputados tal que no existe un proyecto de ley ni comision en la que participe el diputado y haya sido estudiada por el proyecto de ley.
+SELECT leg.dni
+FROM Legislador leg
+WHERE NOT EXISTS (SELECT e.titulo_proyecto_ley
+				FROM Estudia e
+				WHERE e.nombre_comision IN (SELECT pec.nombre_comision
+												FROM Participa_en_comision pec 
+												WHERE pec.dni_legislador= leg.dni));
+															 
+
+															
+CREATE TABLE Participa_en_comision(
+	dni_legislador VARCHAR(8) NOT NULL, 
+	fecha_inicio_participacion DATE NOT NULL, 
+	fecha_fin_participacion DATE NOT NULL,
+	nombre_comision VARCHAR(30) NOT NULL, 
+	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion)
+
+				
+				CREATE TABLE Estudia(
+	nombre_comision VARCHAR(30) NOT NULL, 
+	titulo_proyecto_ley VARCHAR(50) NOT NULL,
+	PRIMARY KEY (nombre_comision, titulo_proyecto_ley)
+);
+
+
+
+dni VARCHAR(8) NOT NULL,
+	nombre VARCHAR(80),
+	fecha_nacimiento DATE,
+	id_bloque_politico INTEGER,
+	provincia VARCHAR(40),
+	tipo CHAR(1),
+	PRIMARY KEY (dni)
+);
 	
 	
 	
