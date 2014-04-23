@@ -9,3 +9,13 @@
 	<ctime>
 	<set>
 
+1398271148 source:c:\users\gino\desktop\ base-datos-g3\scripts\basesgeneradordata\main.cpp
+	<iostream>
+	<string>
+	<sstream>
+	<fstream>
+	<cmath>
+	<cstdlib>
+	<ctime>
+	<set>
+

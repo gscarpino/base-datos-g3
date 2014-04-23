@@ -10,7 +10,7 @@
 #define CANT_PROV 20
 #define CANT_COMISIONES 45
 #define CANT_PARTIDOS 6
-#define CANT_DNI 10181
+#define CANT_DNI 10132
 #define CANT_SENADORES CANT_PROV * 3
 #define CANT_PROYECTOS 30
 
@@ -131,10 +131,11 @@ void insertarLegislador(){
     for(unsigned int i = 1; i <= CANT_SENADORES; i++){
         do{
             d = dnis[rand()%CANT_DNI];
-        }while((conjDNI.end() != conjDNI.find(d)) || d.length() == 0);
+        }while((conjDNI.end() != conjDNI.find(getDNI(d))) || d.length() == 0);
         conjDNI.insert(getDNI(d));
         conjSen.insert(d);
         query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("', ") + intToStr(bloqueSenadoresAzar(i,CANT_PARTIDOS)) + string(",'Provincia") + intToStr(provi) + "','S');";
+        cout << query << endl;
         if((i)%3 == 0) provi = provi + 1;
     }
 
@@ -144,10 +145,14 @@ void insertarLegislador(){
         while(habitantes[i] >= 33000){
             do{
                 d = dnis[rand()%CANT_DNI];
-            }while((conjDNI.end() != conjDNI.find(d)) || d.length() == 0);
+            }while((conjDNI.end() != conjDNI.find(getDNI(d))) || d.length() == 0);
             conjDNI.insert(getDNI(d));
             conjDipu.insert(pair<string,string>(d,intToStr(i+1)));
-            query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("', ") + intToStr(bloqueDiputadosAzar(i,CANT_PARTIDOS)) + string(",'Provincia") + intToStr(i+1) + "','D');";
+            string bloque = intToStr(bloqueDiputadosAzar(i,CANT_PARTIDOS));
+            if(bloque == "-1"){
+                bloque = "1";
+            }
+            query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("',") + bloque + string(",'Provincia") + intToStr(i+1) + "','D');";
             cout << query << endl;
             habitantes[i] = habitantes[i] - 33000;
         }
@@ -196,27 +201,35 @@ string fechaAzar(unsigned int minAnio, unsigned int maxAnio){
 
 unsigned int bloqueSenadoresAzar(unsigned int it, unsigned int cantBloques){
     unsigned int res;
-    if(it <= cantBloques){
-        res = 2* it;
+    if(it == 0){
+        res = 2;
     }
     else{
-        res = 2 * (rand()%cantBloques) + 2;
-        if(res > cantBloques * 2){
-            res = cantBloques*2;
+        if(it <= cantBloques){
+            res = 2* it;
+        }
+        else{
+            res = 2 * (rand()%cantBloques) + 2;
+            if(res > cantBloques * 2){
+                res = cantBloques*2;
+            }
         }
     }
     return res;
 }
 
 unsigned int bloqueDiputadosAzar(unsigned int it, unsigned int cantBloques){
-    unsigned int res;
+    unsigned int res = 1;
     if(it <= cantBloques){
         res = 2 * (it-1) + 1;
     }
     else{
         res = 2 * ((rand()%cantBloques) + 1) - 1;
-        if(res > cantBloques * 2){
-            res = cantBloques*2-1;
+        if(res > (cantBloques * 2 - 1)){
+            res = CANT_PARTIDOS*2-1;
+        }
+        if(res < 1){
+            res = 1;
         }
     }
     return res;
@@ -287,11 +300,16 @@ void insertarPartEnComisiones(){
     string query;
     //Aseguro que todos los dip están en al menos una comision
     unsigned int comision = 0;
+    unsigned cantPresidencias = 0;
     for(set<pair<string, string> >::iterator it = conjDipu.begin(); it != conjDipu.end(); it++){
         string dniDipu = getDNI((*it).first);
         query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,nombre_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31','Comision") + intToStr(comision+1) + string("');");
         cout << query << endl;
-        query = string("insert into Preside_comision (nombre_comision,dni_diputado,fecha_inicio_preside,fecha_fin_preside) values ('Comision") + intToStr(comision+1) + string("','") + dniDipu + string("','2008-01-01','2012-12-31');");
+        if(cantPresidencias < CANT_COMISIONES){
+            query = string("insert into Preside_comision (nombre_comision,dni_diputado,fecha_inicio_preside,fecha_fin_preside) values ('Comision") + intToStr(comision+1) + string("','") + dniDipu + string("','2008-01-01','2012-12-31');");
+            cout << query << endl;
+            cantPresidencias++;
+        }
         for(unsigned int c = 1; c <= CANT_COMISIONES; c++){
             if(rand()%100 > 97){
                 query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,nombre_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31','Comision") + intToStr(c) + string("');");
