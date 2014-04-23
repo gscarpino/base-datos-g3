@@ -42,6 +42,7 @@ CREATE TABLE Provincia(
 CREATE TABLE Bien_economico(
 	id_bien_economico INTEGER NOT NULL,
 	valor INTEGER,
+	tipo CHAR(1),
 	PRIMARY KEY (id_bien_economico)
 );
 
