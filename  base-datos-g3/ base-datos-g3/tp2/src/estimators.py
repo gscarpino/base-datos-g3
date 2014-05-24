@@ -24,7 +24,29 @@ class Estimator(object):
 
     def estimate_greater(self, value):
         raise NotImplementedError()
-	
+
+class Exacto(Estimator):
+	"""Metodo exacto"""
+
+	def build_struct(self):
+		pass
+
+	def estimate_equal(self,value):
+		conexion = sqlite3.connect(self.db)
+		c = conexion.cursor()
+		c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " = " + str(value)  + ";")
+		resultado = c.rowcount
+		conexion.close()
+		return resultado
+		
+	def estimate_greater(self,value):
+		conexion = sqlite3.connect(self.db)
+		c = conexion.cursor()
+		c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " < " + str(value)  + ";")
+		resultado = c.rowcount
+		conexion.close()
+		return resultado
+
 class ClassicHistogram(Estimator):
 	"""Histograma clasico"""
 	
@@ -35,11 +57,9 @@ class ClassicHistogram(Estimator):
 		
 		c.execute("Select min(" + self.column + ") From " + self.table + ";")
 		min = c.fetchone()
-		print "Minimo: " + str(min)
 		
 		c.execute("Select max(" + self.column + ") From " + self.table + ";")
 		max = c.fetchone()
-		print "Maximo: " + str(max)
 		
 		rango = max[0] - min[0]
 		
@@ -51,54 +71,7 @@ class ClassicHistogram(Estimator):
 				indice = indice - 1
 			self.buckets[indice] = self.buckets[indice] + 1
 			cantidad = cantidad + 1
-		
-		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-		print self.buckets
-		print "Suma: " + str(sum(self.buckets))
-
-
-	def estimate_equal(self,value):
-		indice = value / self.anchoBucket
-		if(indice == len(self.buckets)):
-			indice = indice - 1
-		return self.buckets[indice]
-		
-	def estimate_greater(self,value):
-		indice = value / self.anchoBucket
-		if(indice == len(self.buckets)):
-			indice = indice - 1
-		acumulador = 0
-		for i in range(indice+1,len(self.buckets)):
-			acumulador = acumulador + self.buckets[i]
-		return acumulador
-
-
-class DistributedSteps(Estimator):
-	"""Pasos distribuidos"""
-	
-	def build_struct(self):
-		self.buckets = [0] * self.parameter
-		conexion = sqlite3.connect(self.db)
-		c = conexion.cursor()
-		
-		c.execute("Select min(" + self.column + ") From " + self.table + ";")
-		min = c.fetchone()
-		print "Minimo: " + str(min)
-		
-		c.execute("Select max(" + self.column + ") From " + self.table + ";")
-		max = c.fetchone()
-		print "Maximo: " + str(max)
-		
-		rango = max[0] - min[0]
-		
-		self.anchoBucket = rango / self.parameter
-		cantidad = 0
-		for fila in c.execute("Select " + self.column + " From " + self.table + ";"):
-			indice = fila[0] / self.anchoBucket 
-			if(indice == len(self.buckets)):
-				indice = indice - 1
-			self.buckets[indice] = self.buckets[indice] + 1
-			cantidad = cantidad + 1
+		conexion.close()
 		
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
 		#print self.buckets
@@ -116,7 +89,46 @@ class DistributedSteps(Estimator):
 		if(indice == len(self.buckets)):
 			indice = indice - 1
 		acumulador = 0
-		for i in range(indice+1,len(self.buckets)):
+		for i in range(0,indice):
 			acumulador = acumulador + self.buckets[i]
+		return acumulador
+
+
+class DistributedSteps(Estimator):
+	"""Pasos distribuidos"""
+	
+	def build_struct(self):
+		self.buckets = [0] * self.parameter
+		conexion = sqlite3.connect(self.db)
+		c = conexion.cursor()
+		
+		c.execute("Select min(" + self.column + ") From " + self.table + ";")
+		min = c.fetchone()
+		
+		c.execute("Select max(" + self.column + ") From " + self.table + ";")
+		max = c.fetchone()
+		
+		rango = max[0] - min[0]
+		
+		self.anchoBucket = rango / self.parameter
+		cantidad = 0
+		for fila in c.execute("Select " + self.column + " From " + self.table + ";"):
+			indice = fila[0] / self.anchoBucket 
+			if(indice == len(self.buckets)):
+				indice = indice - 1
+			self.buckets[indice] = self.buckets[indice] + 1
+			cantidad = cantidad + 1
+		conexion.close()
+		
+		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
+		#print self.buckets
+		#print "Suma: " + str(sum(self.buckets))
+
+
+	def estimate_equal(self,value):
+		return 0
+		
+	def estimate_greater(self,value):
+		acumulador = 0
 		return acumulador
 	
