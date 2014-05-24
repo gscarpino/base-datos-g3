@@ -3,7 +3,7 @@ import estimators
 
 # Creo una instancia de la clase que representa al metodo
 # 'Histograma Clasico'
-aEstimator = estimators.ClassicHistogram('../test/db.sqlite3', 'table1', 'c1', parameter=20)
+aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', 'c1', parameter=20)
 
 # Pruebo distintas instancias de estimacion
 print "Classic Histogram"
