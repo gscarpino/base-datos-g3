@@ -110,12 +110,14 @@ class DistributedSteps(Estimator):
 		c.execute("Select count(" + self.column + ") From " + self.table + ";")
 		total = c.fetchone()
 		
+		c.execute("Select min(" + self.column + ") From " + self.table + ";")
+		minimo = c.fetchone()
+		
 		self.anchoBucket = total[0] / self.parameter
 		c.execute("Select " + self.column + " From " + self.table + " Order By " + self.column + " Asc;")
 		contador = 0
 		bucketActual = 0
 		temp = 0
-		#ERROR: falta separar el setp para el min valor y un step para el max valor
 		#testing = [0] * self.parameter
 		while True:
 			#testing[bucketActual] = testing[bucketActual] + 1
@@ -133,9 +135,10 @@ class DistributedSteps(Estimator):
 					self.buckets[bucketActual] = fila[0]
 					bucketActual = bucketActual + 1
 		conexion.close()
+		self.buckets[0] = minimo[0]
 		
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-		#print self.buckets
+		print self.buckets
 		#print testing
 		#print "Suma: " + str(sum(self.buckets))
 
@@ -145,10 +148,10 @@ class DistributedSteps(Estimator):
 		while( self.buckets[s] < value ):
 			s = s + 1
 		if(s == 0):
-			
+			pass
 		else:
 			#entre steps
-			
+			pass
 		return 0
 		
 	def estimate_greater(self,value):
