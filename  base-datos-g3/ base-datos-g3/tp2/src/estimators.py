@@ -35,9 +35,8 @@ class Exacto(Estimator):
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
 		resultado = 0
-		#Cambiar, esto creo que pone todo en memoria
-		for row in c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " = " + str(value)  + ";"):
-			resultado = resultado + 1
+		c.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + " = " + str(value)  + ";")
+		resultado = c.fetchone()[0]
 		conexion.close()
 		return resultado
 		
@@ -45,9 +44,8 @@ class Exacto(Estimator):
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
 		resultado = 0
-		#Cambiar, esto creo que pone todo en memoria
-		for row in c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " < " + str(value)  + ";"):
-			resultado = resultado + 1
+		c.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + " > " + str(value)  + ";")
+		resultado = c.fetchone()[0]
 		conexion.close()
 		return resultado
 
@@ -68,14 +66,16 @@ class ClassicHistogram(Estimator):
 		rango = max[0] - min[0]
 		
 		self.anchoBucket = rango / self.parameter
-		cantidad = 0
-		#Cambiar, esto creo que pone todo en memoria
-		for fila in c.execute("Select " + self.column + " From " + self.table + ";"):
-			indice = fila[0] / self.anchoBucket 
-			if(indice == len(self.buckets)):
-				indice = indice - 1
-			self.buckets[indice] = self.buckets[indice] + 1
-			cantidad = cantidad + 1
+		c.execute("Select " + self.column + " From " + self.table + ";")
+		while True:
+			fila = c.fetchone()
+			if(fila == None):
+				break
+			else:
+				indice = fila[0] / self.anchoBucket 
+				if(indice == len(self.buckets)):
+					indice = indice - 1
+				self.buckets[indice] = self.buckets[indice] + 1
 		conexion.close()
 		
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
@@ -94,7 +94,7 @@ class ClassicHistogram(Estimator):
 		if(indice == len(self.buckets)):
 			indice = indice - 1
 		acumulador = 0
-		for i in range(0,indice):
+		for i in range(indice + 1,len(self.buckets)):
 			acumulador = acumulador + self.buckets[i]
 		return acumulador
 
@@ -107,27 +107,35 @@ class DistributedSteps(Estimator):
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
 		
-		c.execute("Select min(" + self.column + ") From " + self.table + ";")
-		min = c.fetchone()
+		c.execute("Select count(" + self.column + ") From " + self.table + ";")
+		total = c.fetchone()
 		
-		c.execute("Select max(" + self.column + ") From " + self.table + ";")
-		max = c.fetchone()
-		
-		rango = max[0] - min[0]
-		
-		self.anchoBucket = rango / self.parameter
-		cantidad = 0
-		#Cambiar, esto creo que pone todo en memoria
-		for fila in c.execute("Select " + self.column + " From " + self.table + ";"):
-			indice = fila[0] / self.anchoBucket 
-			if(indice == len(self.buckets)):
-				indice = indice - 1
-			self.buckets[indice] = self.buckets[indice] + 1
-			cantidad = cantidad + 1
+		self.anchoBucket = total[0] / self.parameter
+		c.execute("Select " + self.column + " From " + self.table + " Order By " + self.column + " Asc;")
+		contador = 0
+		bucketActual = 0
+		temp = 0
+		#testing = [0] * self.parameter
+		while True:
+			#testing[bucketActual] = testing[bucketActual] + 1
+			fila = c.fetchone()
+			if(fila == None):
+				if(not (contador == 0)):
+					self.buckets[bucketActual] = temp
+				break
+			else:
+				if(contador < self.anchoBucket):
+					contador = contador + 1
+					temp = fila[0]
+				else:
+					contador = 0
+					self.buckets[bucketActual] = fila[0]
+					bucketActual = bucketActual + 1
 		conexion.close()
 		
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
 		#print self.buckets
+		#print testing
 		#print "Suma: " + str(sum(self.buckets))
 
 
@@ -135,6 +143,5 @@ class DistributedSteps(Estimator):
 		return 0
 		
 	def estimate_greater(self,value):
-		acumulador = 0
-		return acumulador
+		return 0
 	
