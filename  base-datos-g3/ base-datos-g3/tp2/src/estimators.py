@@ -34,16 +34,20 @@ class Exacto(Estimator):
 	def estimate_equal(self,value):
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
-		c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " = " + str(value)  + ";")
-		resultado = c.rowcount
+		resultado = 0
+		#Cambiar, esto creo que pone todo en memoria
+		for row in c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " = " + str(value)  + ";"):
+			resultado = resultado + 1
 		conexion.close()
 		return resultado
 		
 	def estimate_greater(self,value):
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
-		c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " < " + str(value)  + ";")
-		resultado = c.rowcount
+		resultado = 0
+		#Cambiar, esto creo que pone todo en memoria
+		for row in c.execute("Select " + self.column + " From " + self.table + " Where " + self.column + " < " + str(value)  + ";"):
+			resultado = resultado + 1
 		conexion.close()
 		return resultado
 
@@ -65,6 +69,7 @@ class ClassicHistogram(Estimator):
 		
 		self.anchoBucket = rango / self.parameter
 		cantidad = 0
+		#Cambiar, esto creo que pone todo en memoria
 		for fila in c.execute("Select " + self.column + " From " + self.table + ";"):
 			indice = fila[0] / self.anchoBucket 
 			if(indice == len(self.buckets)):
@@ -112,6 +117,7 @@ class DistributedSteps(Estimator):
 		
 		self.anchoBucket = rango / self.parameter
 		cantidad = 0
+		#Cambiar, esto creo que pone todo en memoria
 		for fila in c.execute("Select " + self.column + " From " + self.table + ";"):
 			indice = fila[0] / self.anchoBucket 
 			if(indice == len(self.buckets)):
