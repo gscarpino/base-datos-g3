@@ -115,6 +115,7 @@ class DistributedSteps(Estimator):
 		contador = 0
 		bucketActual = 0
 		temp = 0
+		#ERROR: falta separar el setp para el min valor y un step para el max valor
 		#testing = [0] * self.parameter
 		while True:
 			#testing[bucketActual] = testing[bucketActual] + 1
@@ -140,6 +141,14 @@ class DistributedSteps(Estimator):
 
 
 	def estimate_equal(self,value):
+		s = 0
+		while( self.buckets[s] < value ):
+			s = s + 1
+		if(s == 0):
+			
+		else:
+			#entre steps
+			
 		return 0
 		
 	def estimate_greater(self,value):
