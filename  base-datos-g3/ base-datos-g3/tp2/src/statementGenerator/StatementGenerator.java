@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class StatementGenerator {
@@ -18,6 +19,15 @@ public class StatementGenerator {
 		
 	}
 	
+	public Integer salario(){
+		Integer randomNum=2000 + (int)(Math.random()*20000);
+		return randomNum;
+		
+		
+	}
+	
+	
+	
 	
 	public void crearTablaPersonas(){
 		
@@ -26,6 +36,9 @@ public class StatementGenerator {
 	
 
 	public static void main(String args[]){
+		
+		//HashMap personas = new HashMap<Integer,Persona>();
+		ArrayList<Persona> personas = new ArrayList<Persona>();
 		
 		StatementGenerator stm= new StatementGenerator();
 		
@@ -52,22 +65,40 @@ public class StatementGenerator {
 		apellidos.add("Mendez");
 		apellidos.add("Mazuce");
 		
+		ArrayList<String> departamentos = new ArrayList<String>();
+		departamentos.add("ventas");
+		departamentos.add("finanzas");
+		departamentos.add("it");
+		departamentos.add("marketing");
 		
-		//ArrayList<String> completos = new ArrayList<String>();
-		
-		//Integer[] edades ={ 23, 24, 25, 31, 58,42,29,30,33,61,35,52};	
 		
 		stm.crearTablaPersonas();
 		
 		for(int i=0; i <nombres.size();i++){
 			for(int j=0; j <apellidos.size();j++){
-			
-				String consulta=("INSERT INTO personas VALUES " +"(" +  stm.Dni()  + ","+" '" +nombres.get(i)+ "'"+", "+ "'" + apellidos.get(j) +"'"+", "+ stm.Edad()+") ");
+				
+				Integer dni=stm.Dni();
+				Persona p= new Persona(dni,nombres.get(i),apellidos.get(j),stm.Edad()) ;
+				personas.add(p);
+				
+				/*String consulta=("INSERT INTO personas VALUES " +"(" +  stm.Dni()  + ","+"'" +nombres.get(i)+ "'"+", "+ "'" + apellidos.get(j) +"'"+", "+ stm.Edad()+") ");
 				String statement = "statement.execute(" +"\" " + consulta+"\" "+")";
+				System.out.println(statement);*/
+			
+				String consulta="\"INSERT INTO personas VALUES" + p.imprimirValorPersona();
+				String statement="statement.execute("+consulta+"\")";
 				System.out.println(statement);
-			}
+
+			}	
+		}
+		
+		for(int i =0; i<personas.size();i++ ){
+			Persona p= personas.get(i);
+			Integer dptNumber=0 + (int)(Math.random()*3);
+			String personasYSalarios= "statement.execute("+ "\" INSERT INTO salarios VALUES("+
+					p.getDni()+ ","+stm.salario()+","+"'"+ departamentos.get(dptNumber)+"'"+ ")"+"\""+ ")";
 			
-			
+			System.out.println(personasYSalarios);
 		}
 		
 		
