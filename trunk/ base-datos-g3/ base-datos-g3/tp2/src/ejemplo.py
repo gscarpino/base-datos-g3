@@ -4,9 +4,9 @@ import estimators
 # Creo una instancia de la clase que representa al metodo
 exacto = estimators.Exacto('db.sqlite3', 'table1', 'c1')
 # 'Histograma Clasico'
-aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', 'c1', parameter=200)
+aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', 'c1', parameter=20)
 # 'Pasos Distribuidos'
-bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', 'c1', parameter=200)
+bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', 'c1', parameter=20)
 
 # Pruebo distintas instancias de estimacion
 print "Classic Histogram"
