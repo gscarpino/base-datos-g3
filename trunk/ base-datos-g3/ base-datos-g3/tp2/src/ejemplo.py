@@ -14,7 +14,7 @@ print "  Sel(=%d) : %3.2f" % (50, aEstimator.estimate_equal(50))
 print "  Sel(>%d) : %3.2f" % (70, aEstimator.estimate_greater(70))
 
 print "Pasos Distribuidos"
-print "  Sel(=%d) : %3.2f" % (50, bEstimator.estimate_equal(50))
+print "  Sel(=%d) : %3.2f" % (50, bEstimator.estimate_equal(93))
 print "  Sel(>%d) : %3.2f" % (70, bEstimator.estimate_greater(70))
 
 print "Exacto"
