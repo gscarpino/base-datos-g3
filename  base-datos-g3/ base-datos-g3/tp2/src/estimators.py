@@ -119,6 +119,7 @@ class DistributedSteps(Estimator):
 		self.anchoBucket = total[0] / self.parameter
 		c.execute("Select " + self.column + " From " + self.table + " Order By " + self.column + " Asc;")
 		contador = 0
+    contador2 = 0
 		bucketActual = 0
 		temp = 0
 		#testing = [0] * self.parameter
@@ -130,15 +131,21 @@ class DistributedSteps(Estimator):
 					self.buckets[bucketActual] = [temp,contador]
 				break
 			else:
+        if(contador2 == bucketActual * ((self.total - 1) / self.parameter)):
+          self.buckets[bucketActual][0] = fila[0]
 				if(contador < self.anchoBucket):
 					contador = contador + 1
-					temp = fila[0]
+          contador2 = contador2 + 1
+          temp = fila[0]
 				else:
-					self.buckets[bucketActual] = [fila[0],contador+1]
+					self.buckets[bucketActual][1] = contador+1
 					contador = 0
+          contador2 = contador2 + 1
 					bucketActual = bucketActual + 1
 		conexion.close()
+    #por las dudas, revisar si hace falta
 		self.buckets[0][0] = self.minimo[0]
+    self.buckets[len(self.buckets)-1][1] = self.maximo
 		
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
 		print self.buckets
@@ -166,11 +173,12 @@ class DistributedSteps(Estimator):
 					while( self.buckets[s][0] == value ):
 						repeticiones = repeticiones + 1
 						s = s + 1
-					resultado = self.buckets[s-1][1]
+  					resultado = self.buckets[s-1][1]
 				else:
 					#Esta entre buckets
-					#sel(x) = (1/3)  / S mas o menos
-					resultado =  (self.anchoBucket / 3)
+					#dudo que este bien pero es lo que dice el paper
+          #yo haria: resultado = self.buckets[s-1][1] / 2
+					resultado =  ((1/3) / self.parameter) * 100
 				
 		return resultado
 		
