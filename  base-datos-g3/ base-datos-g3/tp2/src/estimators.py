@@ -3,6 +3,8 @@ import sqlite3
 import numpy as np
 import pylab
 import random
+import intervalos
+import math
 
 class Estimator(object):
     """Clase base de los estimadores."""
@@ -43,7 +45,7 @@ class Exacto(Estimator):
 		resultado = c.fetchone()[0]
 		conexion.close()
 		return 1.0 * resultado / self.total
-		
+
 	def estimate_greater(self,value):
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
@@ -55,23 +57,23 @@ class Exacto(Estimator):
 
 class ClassicHistogram(Estimator):
 	"""Histograma clasico"""
-	
+
 	def build_struct(self):
 		self.buckets = [0] * self.parameter
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
-		
+
 		c.execute("Select min(" + self.column + ") From " + self.table + ";")
 		min = c.fetchone()[0]
-		
+
 		c.execute("Select max(" + self.column + ") From " + self.table + ";")
 		max = c.fetchone()[0]
-		
+
 		c.execute("Select max(" + self.column + ") From " + self.table + ";")
 		self.total = c.fetchone()[0]
-		
+
 		rango = max - min
-		
+
 		self.anchoBucket = rango / self.parameter
 		c.execute("Select " + self.column + " From " + self.table + ";")
 		while True:
@@ -79,12 +81,12 @@ class ClassicHistogram(Estimator):
 			if(fila == None):
 				break
 			else:
-				indice = fila[0] / self.anchoBucket 
+				indice = fila[0] / self.anchoBucket
 				if(indice == len(self.buckets)):
 					indice = indice - 1
 				self.buckets[indice] = self.buckets[indice] + 1
 		conexion.close()
-		
+
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
 		#print self.buckets
 		#print "Suma: " + str(sum(self.buckets))
@@ -95,7 +97,7 @@ class ClassicHistogram(Estimator):
 		if(indice == len(self.buckets)):
 			indice = indice - 1
 		return (1.0*self.buckets[indice] / self.total) / 100.0
-		
+
 	def estimate_greater(self,value):
 		indice = value / self.anchoBucket
 		if(indice == len(self.buckets)):
@@ -108,21 +110,21 @@ class ClassicHistogram(Estimator):
 
 class DistributedSteps(Estimator):
 	"""Pasos distribuidos"""
-	
+
 	def build_struct(self):
 		self.buckets = [[0,0]] * self.parameter
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
-		
+
 		c.execute("Select count(" + self.column + ") From " + self.table + ";")
 		self.total = c.fetchone()[0]
-		
+
 		c.execute("Select min(" + self.column + ") From " + self.table + ";")
 		self.minimo = c.fetchone()[0]
-		
+
 		c.execute("Select max(" + self.column + ") From " + self.table + ";")
 		self.maximo = c.fetchone()[0]
-		
+
 		self.anchoBucket = self.total / self.parameter
 		c.execute("Select " + self.column + " From " + self.table + " Order By " + self.column + " Asc;")
 		contador = 0
@@ -153,7 +155,7 @@ class DistributedSteps(Estimator):
 		#self.buckets[0][0] = self.minimo
 		#self.buckets[len(self.buckets)-1][1] = self.maximo
 		#print "Total: " + str(self.total)
-		
+
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
 		#print self.buckets
 		#print testing
@@ -197,9 +199,9 @@ class DistributedSteps(Estimator):
 							resultado = ((1.0 * repeticiones) / self.parameter)
 					else:
 						#Esta entre steps
-						resultado =  ((1.0/3.0) / self.parameter) 
+						resultado =  ((1.0/3.0) / self.parameter)
 		return resultado
-		
+
 	def estimate_greater(self,value):
 		s = 0
 		resultado = 0
@@ -235,7 +237,7 @@ class DistributedSteps(Estimator):
 								s = s + 1
 							if(s == (len(self.buckets)-1)):
 								#caso de repeticiones de steps incluyendo el ultimo
-								resultado = 0 
+								resultado = 0
 							else:
 								#repeticiones de steps pero no incluye al 1ero ni al ultimo
 								resultado = 1 - ((s - 0.5) / self.parameter) - self.estimate_equal(value)
@@ -243,4 +245,100 @@ class DistributedSteps(Estimator):
 							#Esta entre steps
 							resultado =  1- ((1.0 * s + (1.0/3.0)) / self.parameter) -self.estimate_equal(value)
 		return resultado
-	
+
+
+
+##class Entropia(Estimator):
+##		buckets= []
+##		entropiaPorBuckets= []
+##		granularidad = 5
+##
+##		def entropiaTotal():
+##			acum=0
+##			for entry in entropiaPorBuckets:
+##				acum= entry.getEntropia+acum
+##			return acum
+##
+##        #calcula la entropia de
+##        def calcularEntropia(minRange,maxRange,cursor,table,column):
+##			resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + ">=" + str(minRange)+ "and" + self.column+ "<="+ str(maxRange)  + ";")
+##			totalenBucket=resConsulta.fetchone()[0]
+##			print "el total en bucket es..." +totalenBucket
+##            acum=0
+##            for a in range(minRange,math.floor(maxRange)):
+##                resConsulta=resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" a ";")
+##                probabilidad = resConsulta.resConsulta.fetchone()[0]/totalenBucket
+##                acum = acum+ (a* math.log(probabilidad))
+##            return (-1*acum)
+##
+##        #divido cada bucket en 3 y me fijo con cual maximizo la entropia
+##        def splitInterval(intervalo,p,cursor,table,column):
+##
+##            base=intervalo.getBase
+##            top=intervalo.getTope
+##            ancho = top-base
+##            granularidad= ancho/3
+##            entropiaActual= intervalo.getEntropia
+##            entropia1=calcularEntropia(base,base+granularidad,cursor,table,column)
+##            entropia2=calcularEntropia((base,base+(2*granularidad),cursor,table,column))
+##            entropia3= calcularEntropia(base+(2*granularidad),top,cursor,table,column)
+##            entropia4=calcularEntropia(base+granularidad,top,cursor,table,column)
+##            result=[]
+##            if entropia1 > entropia2:
+##                    intervalo1=Intervalo(base,base+granularidad,entropia1)
+##                    intervalo2=Intervalo(base+granularidad,top,entropia4)
+##                    result =[intervalo1,intervalo2]
+##                    return result
+##            if entropia2>entropia1:
+##                    intervalo3=Intervalo(base,base+(2*granularidad),entropia2)
+##                    intervalo4=Intervalo(base+(2*granularidad),top,entropia3)
+##                    result =[intervalo3,intervalo4]
+##                    return result
+##            if entropia4>entropia3:
+##                    intervalo5=Intervalo(base,base+granularidad,entropia1)
+##                    intervalo6=Intervalo(base+granularidad,entropia4)
+##                    result =[intervalo5,intervalo6]
+##                    return result
+##
+##            #nunca deberia entrar aca pero pongo por las dudas si entropia 3 >a entropia 4
+##             intervalo7=Intervalo(base,base+(2*granularidad),entropia2)
+##             intervalo8=Intervalo(base+(2*granularidad),top,entropia3)
+##             result =[intervalo7,intervalo8]
+##             return result
+##
+##
+##
+##		def build_struct(self):
+##			conexion = sqlite3.connect(self.db)
+##			c = conexion.cursor()
+##
+##			c.execute("Select count(" + self.column + ") From " + self.table + ";")
+##			self.total = c.fetchone()[0]
+##			print "el total es....."+ self.total
+##
+##			c.execute("Select min(" + self.column + ") From " + self.table + ";")
+##			self.minimo = c.fetchone()[0]
+##
+##			anchoTotal = self.maximo -self.minimo
+##
+##
+##			c.execute("Select max(" + self.column + ") From " + self.table + ";")
+##			self.maximo = c.fetchone()[0]
+##            i=Intervalo(self.minimo,self.maximo,0)
+##            self.buckets.append(i)
+##			entropiaPorBuckets.append(0)
+##			print "tengo la primer entropia todo esta en un bucket por lo tanto es 0"
+##			for p in range(0,parameter):
+##				lista=[]
+##				for intervalo in bucket:
+##					lista =lista.extend(splitInterval(intervalo, p)) #le paso el numero de index par saber la entropia total
+##
+##
+##
+##
+##				calclularEntropia()
+##
+##				self.entropiaPorBuckets.append()
+##
+##
+##
