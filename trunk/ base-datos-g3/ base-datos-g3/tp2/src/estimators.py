@@ -249,28 +249,24 @@ class DistributedSteps(Estimator):
 
 
 ##class Entropia(Estimator):
-##		buckets= []
-##		entropiaPorBuckets= []
-##		granularidad = 5
-##
-##		def entropiaTotal():
+##        buckets= []
+##        def entropiaTotal(lista):
 ##			acum=0
-##			for entry in entropiaPorBuckets:
-##				acum= entry.getEntropia+acum
+##			for entry in lista:
+##			  acum= entry.getEntropia+acum
 ##			return acum
 ##
-##        #calcula la entropia de
-##        def calcularEntropia(minRange,maxRange,cursor,table,column):
-##			resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + ">=" + str(minRange)+ "and" + self.column+ "<="+ str(maxRange)  + ";")
-##			totalenBucket=resConsulta.fetchone()[0]
-##			print "el total en bucket es..." +totalenBucket
+##        def calcular_Entropia(minRange,maxRange,cursor,table,column):
+##            resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + ">=" + str(minRange)+ "and" + self.column+ "<="+ str(maxRange)  + ";")
+##            totalenBucket=resConsulta.fetchone()[0]
+##            print "el total en bucket es..." +totalenBucket
 ##            acum=0
 ##            for a in range(minRange,math.floor(maxRange)):
-##                resConsulta=resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" a ";")
-##                probabilidad = resConsulta.resConsulta.fetchone()[0]/totalenBucket
+##                #resConsulta=resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" a ";")
+##                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "="+ a + ";")
+##                probabilidad = resConsulta.fetchone()[0]/totalenBucket
 ##                acum = acum+ (a* math.log(probabilidad))
 ##            return (-1*acum)
-##
 ##        #divido cada bucket en 3 y me fijo con cual maximizo la entropia
 ##        def splitInterval(intervalo,p,cursor,table,column):
 ##
@@ -301,44 +297,55 @@ class DistributedSteps(Estimator):
 ##                    return result
 ##
 ##            #nunca deberia entrar aca pero pongo por las dudas si entropia 3 >a entropia 4
-##             intervalo7=Intervalo(base,base+(2*granularidad),entropia2)
-##             intervalo8=Intervalo(base+(2*granularidad),top,entropia3)
-##             result =[intervalo7,intervalo8]
-##             return result
+##            intervalo7=Intervalo(base,base+(2*granularidad),entropia2)
+##            intervalo8=Intervalo(base+(2*granularidad),top,entropia3)
+##            result =[intervalo7,intervalo8]
+##            return result
 ##
 ##
 ##
-##		def build_struct(self):
-##			conexion = sqlite3.connect(self.db)
-##			c = conexion.cursor()
-##
-##			c.execute("Select count(" + self.column + ") From " + self.table + ";")
-##			self.total = c.fetchone()[0]
-##			print "el total es....."+ self.total
-##
-##			c.execute("Select min(" + self.column + ") From " + self.table + ";")
-##			self.minimo = c.fetchone()[0]
-##
-##			anchoTotal = self.maximo -self.minimo
-##
-##
-##			c.execute("Select max(" + self.column + ") From " + self.table + ";")
-##			self.maximo = c.fetchone()[0]
+##            def build_struct(self):
+##		    conexion = sqlite3.connect(self.db)
+##		    c = conexion.cursor()
+##		    c.execute("Select count(" + self.column + ") From " + self.table + ";")
+##		    self.total = c.fetchone()[0]
+##		    print "el total es....."+ self.total
+##            c.execute("Select min(" + self.column + ") From " + self.table + ";")
+##            self.minimo = c.fetchone()[0]
+##            #min = c.fetchone()[0]
+##            #anchoTotal = self.maximo -self.minimo
+##            c.execute("Select max(" + self.column + ") From " + self.table + ";")
+##            self.maximo = c.fetchone()[0]
 ##            i=Intervalo(self.minimo,self.maximo,0)
 ##            self.buckets.append(i)
-##			entropiaPorBuckets.append(0)
-##			print "tengo la primer entropia todo esta en un bucket por lo tanto es 0"
-##			for p in range(0,parameter):
-##				lista=[]
-##				for intervalo in bucket:
-##					lista =lista.extend(splitInterval(intervalo, p)) #le paso el numero de index par saber la entropia total
+##            print "tengo la primer entropia todo esta en un bucket por lo tanto es 0"
+##            k=0
+##            copiaBuckets=buckets
+##            while k <= parameter:
+##                listaEntropias =[[]]
+##                j=0
+##                for intervalo in buckets:
+##                    listaConIntervaloDividido=[]
+##                    divisionIntervalos =splitInterval(intervalo,k,c,self.table,self.column)
+##                    listaConIntervaloDividido =buckets[:j]+divisionIntervalos+buckets[j+1:]
+##                    listaEntropias.append(listaConIntervaloDividido)
+##                    j=j+1
 ##
 ##
+##                entropiaMaxima=0
+##                resultado=[]
+##                for histogramaCandidato in listaEntropias:
+##                    entropiaActual=entropiaTotal(histogramaCandidato)
+##                    if entropiaActual >entropiaMaxima:
+##                        resultado=histogramaCandidato
+##                        entropiaMaxima=entropiaActual
 ##
+##                copiaBuckets=resultado
 ##
-##				calclularEntropia()
-##
-##				self.entropiaPorBuckets.append()
-##
-##
-##
+##            buckets=copiaBuckets
+
+
+
+
+
+
