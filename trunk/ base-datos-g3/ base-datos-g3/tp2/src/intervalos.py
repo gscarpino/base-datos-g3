@@ -12,7 +12,7 @@ class Intervalo:
 #    cantValues=0
     def __init__(self,base,tope,valor,cantValues,distinctValues):
         self.base = base
-        self.tope = table
+        self.tope = tope
         self.valor = valor
         self.cantValues=cantValues
         self.distinctValues=distinctValues
