@@ -18,16 +18,16 @@ class Intervalo:
         self.distinctValues=distinctValues
 
     def getTope(self):
-        return tope
+        return self.tope
 
     def getBase(self):
-        return base
+        return self.base
 
     def getEntropia(self):
-        return valor
+        return self.valor
 
     def getCantDistintos(self):
-        return distinctValues
+        return self.distinctValues
 
     def getCant(self):
-        return cantValues
+        return self.cantValues
