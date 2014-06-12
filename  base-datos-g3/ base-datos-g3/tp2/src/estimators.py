@@ -248,165 +248,160 @@ class DistributedSteps(Estimator):
 
 
 
-##class Entropia(Estimator):
-##
-##
-##
-##        def cantidadDeValoresDistintosEnBucket(self,base,tope,column,table,cursor):
-##            res=0
-##            for a in range(base,tope):
-##                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
-##                totalDeValor=resConsulta.fetchone()[0]
-##                if totalDeValor>0:
-##                    res=res+totalDeValor
-##
-##            return res
-##
-##        def cantidadEnBucket(self,base,tope,column,table,cursor):
-##             res=0
-##             for a in range(base,tope):
-##                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
-##                totalDeValor=resConsulta.fetchone()[0]
-##                res=res+totalDeValor
-##
-##             return res
-##
-##
-##
-##
-##        def entropiaTotal(lista):
-##			acum=0
-##			for entry in lista:
-##			  acum= entry.getEntropia+acum
-##			return acum
-##
-##        def calcular_Entropia(minRange,maxRange,cursor,table,column):
-##            resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + ">=" + str(minRange)+ "and" + self.column+ "<="+ str(maxRange)  + ";")
-##            totalenBucket=resConsulta.fetchone()[0]
-##            print "el total en bucket es..." +totalenBucket
-##            acum=0
-##            for a in range(minRange,math.floor(maxRange)):
-##                #resConsulta=resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" a ";")
-##                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "="+ a + ";")
-##                probabilidad = resConsulta.fetchone()[0]/totalenBucket
-##                acum = acum+ (a* math.log(probabilidad))
-##            return (-1*acum)
-##        #divido cada bucket en 3 y me fijo con cual maximizo la entropia
-##        def splitInterval(intervalo,p,cursor,table,column):
-##
-##            base=intervalo.getBase
-##            top=intervalo.getTope
-##            ancho = top-base
-##            granularidad= ancho/3
-##            entropiaActual= intervalo.getEntropia
-##            entropia1=calcularEntropia(base,base+granularidad,cursor,table,column)
-##            entropia2=calcularEntropia((base,base+(2*granularidad),cursor,table,column))
-##            entropia3= calcularEntropia(base+(2*granularidad),top,cursor,table,column)
-##            entropia4=calcularEntropia(base+granularidad,top,cursor,table,column)
-##            result=[]
-##            if entropia1 > entropia2:
-##                    distintosIntervalos= cantidadDeValoresDistintosEnBucket(base,base+granularidad,column,table,cursor)
-##                    cantEnInter= cantidadEnBucket(base,base+granularidad,column,table,cursor)
-##                    intervalo1=intervalos.Intervalo(base,base+granularidad,entropia1,cantEnInter,distintosIntervalos)
-##
-##                    distintosIntervalos= cantidadDeValoresDistintosEnBucket(base+granularidad,top,column,table,cursor)
-##                    cantEnInter= cantidadEnBucket(base+granularidad,top,column,table,cursor)
-##                    intervalo2=intervalos.Intervalo(base+granularidad,top,entropia4,cantEnInter,distintosIntervalos)
-##                    result =[intervalo1,intervalo2]
-##                    return result
-##            if entropia2>entropia1:
-##                    distintosIntervalos= cantidadDeValoresDistintosEnBucket(base,base+(2*granularidad),column,table,cursor)
-##                    cantEnInter= cantidadEnBucket(base,base+(2*granularidad),column,table,cursor)
-##                    intervalo3=intervalos.Intervalo(base,base+(2*granularidad),entropia2,cantEnInter,distintosIntervalos)
-##
-##                    distintosIntervalos= cantidadDeValoresDistintosEnBucket(base+(2*granularidad),top,column,table,cursor)
-##                    cantEnInter= cantidadEnBucket(base+(2*granularidad),top,column,table,cursor)
-##                    intervalo4=intervalos.Intervalo(base+(2*granularidad),top,entropia3,cantEnInter,distintosIntervalos)
-##
-##                    result =[intervalo3,intervalo4]
-##                    return result
-##            if entropia4>entropia3:
-##                    distintosIntervalos= cantidadDeValoresDistintosEnBucket(base,base+granularidad,column,table,cursor)
-##                    cantEnInter= cantidadEnBucket(base, base+granularidad,column,table,cursor)
-##                    intervalo5=intervalos.Intervalo(base,base+granularidad,entropia1,cantEnInter,distintosIntervalos)
-##
-##                    distintosIntervalos= cantidadDeValoresDistintosEnBucket(base+granularidad,top,column,table,cursor)
-##                    cantEnInter= cantidadEnBucket(base+granularidad,top,column,table,cursor)
-##                    intervalo6=intervalos.Intervalo(base+granularidad,top,entropia4,cantEnInter,distintosIntervalos)
-##
-##                    result =[intervalo5,intervalo6]
-##                    return result
-##
-##            #nunca deberia entrar aca pero pongo por las dudas si entropia 3 >a entropia 4
-##            distintosIntervalos= cantidadDeValoresDistintosEnBucket(base,base+(2*granularidad),column,table,cursor)
-##            cantEnInter= cantidadEnBucket(base,base+(2*granularidad),column,table,cursor)
-##            intervalo7=intervalos.Intervalo(base,base+(2*granularidad),entropia2,cantEnInter,distintosIntervalos)
-##
-##            distintosIntervalos= cantidadDeValoresDistintosEnBucket(base+(2*granularidad),top,column,table,cursor)
-##            cantEnInter= cantidadEnBucket(base+(2*granularidad),top,column,table,cursor)
-##            intervalo8=intervalos.Intervalo(base+(2*granularidad),top,entropia3,cantEnInter,distintosIntervalos)
-##            result =[intervalo7,intervalo8]
-##            return result
-##
-##
-##
-##        def build_struct(self):
-##            self.buckets= []
-##            conexion = sqlite3.connect(self.db)
-##    	    c = conexion.cursor()
-##    	    c.execute("Select count(" + self.column + ") From " + self.table + ";")
-##    	    #self.total = c.fetchone()[0]
-##            total = c.fetchone()[0]
-##            #print "el total es....."+ str(total)
-##            c.execute("Select min(" + self.column + ") From " + self.table + ";")
-##            #self.minimo = c.fetchone()[0]
-##            self.minimo = c.fetchone()[0]
-##            c.execute("Select max(" + self.column + ") From " + self.table + ";")
-##            #self.maximo = c.fetchone()[0]
-##            self.maximo = c.fetchone()[0]
-##            anchoTotal = self.maximo -self.minimo
-##            cantValoresDistin=self.cantidadDeValoresDistintosEnBucket(self.minimo,self.maximo,self.column,self.table,c)
-##            cantVal=self.cantidadEnBucket(self.minimo,self.maximo,self.column,self.table,c)
-##            i=intervalos.Intervalo(self.minimo,self.maximo,0,cantVal,cantValoresDistin)
-##            self.buckets.append(i)
-##            print "tengo la primer entropia todo esta en un bucket por lo tanto es 0"
-##            k=0
-##            copiaBuckets=buckets
-##            while k <= parameter:
-##                listaEntropias =[[]]
-##                j=0
-##                for intervalo in buckets:
-##                    listaConIntervaloDividido=[]
-##                    divisionIntervalos =splitInterval(intervalo,k,c,self.table,self.column)
-##                    listaConIntervaloDividido =buckets[:j]+divisionIntervalos+buckets[j+1:]
-##                    listaEntropias.append(listaConIntervaloDividido)
-##                    j=j+1
-##
-##
-##                entropiaMaxima=0
-##                resultado=[]
-##                for histogramaCandidato in listaEntropias:
-##                    entropiaActual=entropiaTotal(histogramaCandidato)
-##                    if entropiaActual >entropiaMaxima:
-##                        resultado=histogramaCandidato
-##                        entropiaMaxima=entropiaActual
-##
-##                copiaBuckets=resultado
-##
-##            buckets=copiaBuckets
-##
-##
-##        def estimate_equal(self,value):
-##
-##                for intervalo in buckets:
-##                    if (intervalo.getBase <= value) and (intervalo.getTope > value):
-##                        return intervalo.getCant *intervalo.getCantDistintos
-##                return 0
-##
-##        def estimate_greater(self,value):
-##
-##                for intervalo in buckets:
-##                    if (intervalo.getBase < value) and (intervalo.getTope > value):
-##                        stimated=value/(intervalo.getTope-intervalo.getBase)
-##                        return intervalo.getCant *stimated
-##                return 0
+class Entropia(Estimator):
+
+
+
+        def cantidadDeValoresDistintosEnBucket(self,base,tope,column,table,cursor):
+            res=0
+            for a in range(base,tope):
+                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
+                totalDeValor=resConsulta.fetchone()[0]
+                if totalDeValor>0:
+                    res=res+totalDeValor
+
+            return res
+
+        def cantidadEnBucket(self,base,tope,column,table,cursor):
+             res=0
+             for a in range(base,tope):
+                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
+                totalDeValor=resConsulta.fetchone()[0]
+                res=res+totalDeValor
+
+             return res
+
+        def entropiaTotal(self,lista):
+			acum=0
+			for entry in lista:
+			  acum= entry.getEntropia()+acum
+			return acum
+
+        def calcularEntropia(self,minRange,maxRange,cursor,table,column):
+            resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + ">=" + str(minRange)+ " AND " + self.column+ "<="+ str(maxRange)  + ";")
+            totalenBucket=resConsulta.fetchone()[0]
+            print "el total en bucket es..." +str(totalenBucket)
+            acum=0
+            #for a in range(minRange,math.floor(maxRange)):
+            for a in range(minRange,maxRange):
+                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "="+ str(a) + ";")
+                probabilidad = resConsulta.fetchone()[0]
+                select=probabilidad/float(totalenBucket)
+                acum = acum+ (a* math.log(select))
+            return (-1*acum)
+        #divido cada bucket en 3 y me fijo con cual maximizo la entropia
+        def splitInterval(self,intervalo,p,cursor,table,column):
+
+            base=intervalo.getBase()
+            top=intervalo.getTope()
+            ancho = top-base
+            granularidad= ancho/3
+            entropiaActual= intervalo.getEntropia()
+            entropia1=self.calcularEntropia(base,base+granularidad,cursor,table,column)
+            entropia2=self.calcularEntropia(base,base+(2*granularidad),cursor,table,column)
+            entropia3= self.calcularEntropia(base+(2*granularidad),top,cursor,table,column)
+            entropia4=self.calcularEntropia(base+granularidad,top,cursor,table,column)
+            result=[]
+            if entropia1 > entropia2:
+                    distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base,base+granularidad,column,table,cursor)
+                    cantEnInter= self.cantidadEnBucket(base,base+granularidad,column,table,cursor)
+                    intervalo1=Intervalo(base,base+granularidad,entropia1,cantEnInter,distintosIntervalos)
+
+                    distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base+granularidad,top,column,table,cursor)
+                    cantEnInter= self.cantidadEnBucket(base+granularidad,top,column,table,cursor)
+                    intervalo2=intervalos.Intervalo(base+granularidad,top,entropia4,cantEnInter,distintosIntervalos)
+                    result =[intervalo1,intervalo2]
+                    return result
+            if entropia2>entropia1:
+                    distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base,base+(2*granularidad),column,table,cursor)
+                    cantEnInter= self.cantidadEnBucket(base,base+(2*granularidad),column,table,cursor)
+                    intervalo3=intervalos.Intervalo(base,base+(2*granularidad),entropia2,cantEnInter,distintosIntervalos)
+
+                    distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base+(2*granularidad),top,column,table,cursor)
+                    cantEnInter= self.cantidadEnBucket(base+(2*granularidad),top,column,table,cursor)
+                    intervalo4=intervalos.Intervalo(base+(2*granularidad),top,entropia3,cantEnInter,distintosIntervalos)
+
+                    result =[intervalo3,intervalo4]
+                    return result
+            if entropia4>entropia3:
+                    distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base,base+granularidad,column,table,cursor)
+                    cantEnInter= self.cantidadEnBucket(base, base+granularidad,column,table,cursor)
+                    intervalo5=intervalos.Intervalo(base,base+granularidad,entropia1,cantEnInter,distintosIntervalos)
+
+                    distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base+granularidad,top,column,table,cursor)
+                    cantEnInter= self.cantidadEnBucket(base+granularidad,top,column,table,cursor)
+                    intervalo6=intervalos.Intervalo(base+granularidad,top,entropia4,cantEnInter,distintosIntervalos)
+
+                    result =[intervalo5,intervalo6]
+                    return result
+
+            #nunca deberia entrar aca pero pongo por las dudas si entropia 3 >a entropia 4
+            distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base,base+(2*granularidad),column,table,cursor)
+            cantEnInter= self.cantidadEnBucket(base,base+(2*granularidad),column,table,cursor)
+            intervalo7=intervalos.Intervalo(base,base+(2*granularidad),entropia2,cantEnInter,distintosIntervalos)
+
+            distintosIntervalos= self.cantidadDeValoresDistintosEnBucket(base+(2*granularidad),top,column,table,cursor)
+            cantEnInter= self.cantidadEnBucket(base+(2*granularidad),top,column,table,cursor)
+            intervalo8=intervalos.Intervalo(base+(2*granularidad),top,entropia3,cantEnInter,distintosIntervalos)
+            result =[intervalo7,intervalo8]
+            return result
+
+
+
+        def build_struct(self):
+            self.buckets= []
+            conexion = sqlite3.connect(self.db)
+    	    c = conexion.cursor()
+    	    c.execute("Select count(" + self.column + ") From " + self.table + ";")
+            total = c.fetchone()[0]
+            #print "el total es....."+ str(total)
+            c.execute("Select min(" + self.column + ") From " + self.table + ";")
+            self.minimo = c.fetchone()[0]
+            c.execute("Select max(" + self.column + ") From " + self.table + ";")
+            self.maximo = c.fetchone()[0]
+            anchoTotal = self.maximo -self.minimo
+            cantValoresDistin=self.cantidadDeValoresDistintosEnBucket(self.minimo,self.maximo,self.column,self.table,c)
+            cantVal=self.cantidadEnBucket(self.minimo,self.maximo,self.column,self.table,c)
+            i=intervalos.Intervalo(self.minimo,self.maximo,0,cantVal,cantValoresDistin)
+            self.buckets.append(i)
+            print "tengo la primer entropia todo esta en un bucket por lo tanto es 0"
+            k=0
+            copiaBuckets=self.buckets
+            while k <= self.parameter:
+                listaEntropias =[[]]
+                j=0
+                for intervalo in self.buckets:
+                    listaConIntervaloDividido=[]
+                    divisionIntervalos =self.splitInterval(intervalo,k,c,self.table,self.column)
+                    listaConIntervaloDividido =self.buckets[:j]+divisionIntervalos+self.buckets[j+1:]
+                    listaEntropias.append(listaConIntervaloDividido)
+                    j=j+1
+
+
+                entropiaMaxima=0
+                resultado=[]
+                for histogramaCandidato in listaEntropias:
+                    entropiaActual=self.entropiaTotal(histogramaCandidato)
+                    if entropiaActual >entropiaMaxima:
+                        resultado=histogramaCandidato
+                        entropiaMaxima=entropiaActual
+
+                copiaBuckets=resultado
+                k=k+1
+            self.buckets=copiaBuckets
+
+
+        def estimate_equal(self,value):
+
+                for intervalo in self.buckets:
+                    if (intervalo.getBase() <= value) and (intervalo.getTope() > value):
+                        return intervalo.getCant() *intervalo.getCantDistintos()
+                return 0
+
+        def estimate_greater(self,value):
+
+                for intervalo in self.buckets:
+                    if (intervalo.getBase() < value) and (intervalo.getTope() > value):
+                        stimated=value/(intervalo.getTope()-intervalo.getBase())
+                        return intervalo.getCant() *stimated
+                return 0
