@@ -31,3 +31,10 @@ class Intervalo:
 
     def getCant(self):
         return self.cantValues
+
+    def mostrar(self):
+        print self.base
+        print self.tope
+        print self.valor
+        print self.distinctValues
+        print self.cantValues

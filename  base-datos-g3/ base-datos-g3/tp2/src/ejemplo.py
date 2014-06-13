@@ -4,9 +4,9 @@ import estimators
 # Creo una instancia de la clase que representa al metodo
 exacto = estimators.Exacto('db.sqlite3', 'table1', 'c1')
 # 'Histograma Clasico'
-aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', 'c1', parameter=100)
+aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', 'c1', parameter=3)
 # 'Pasos Distribuidos'
-bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', 'c1', parameter=100)
+bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', 'c1', parameter=3)
 
 cEstimator = estimators.Entropia('db.sqlite3', 'table1', 'c1', parameter=3)
 # Pruebo distintas instancias de estimacion
@@ -24,4 +24,4 @@ print "  Sel(>%d) : %3.5f" % (70, exacto.estimate_greater(70))
 
 print "Entropia"
 print "  Sel(=%d) : %3.5f" % (50, cEstimator.estimate_equal(50))
-print "  Sel(>%d) : %3.5f" % (70, cEstimator.estimate_greater(70))
+#print "  Sel(>%d) : %3.5f" % (70, cEstimator.estimate_greater(70))
