@@ -254,21 +254,28 @@ class Entropia(Estimator):
 
         def cantidadDeValoresDistintosEnBucket(self,base,tope,column,table,cursor):
             res=0
-            for a in range(base,tope):
-                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
-                totalDeValor=resConsulta.fetchone()[0]
-                if totalDeValor>0:
-                    res=res+totalDeValor
+           # for a in range(base,tope):
+                #resConsulta=cursor.execute("Select count("+" distinct " + self.column + ") From " + self.table + " Where " + self.column + "=" +  str(a) +";")
+            resConsulta=cursor.execute("Select count("+" distinct " + self.column + ") From " + self.table + " Where " + self.column + " >= " +  str(base) + " and "+ self.column+ " <= "+ str(tope) +";")
+            totalDeValor=resConsulta.fetchone()[0]
+            res=totalDeValor
+                #if totalDeValor>0:
+                    #res=res+totalDeValor
 
+            print "la cantidad de valores distintos en bucket es"
+            print res
             return res
 
         def cantidadEnBucket(self,base,tope,column,table,cursor):
              res=0
-             for a in range(base,tope):
-                resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
-                totalDeValor=resConsulta.fetchone()[0]
-                res=res+totalDeValor
-
+             resConsulta=cursor.execute("Select count("+ self.column + ") From " + self.table + " Where " + self.column + " >= " +  str(base) + " and "+ self.column+ " <= "+ str(tope) +";")
+             #for a in range(base,tope):
+             #resConsulta=cursor.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + "=" + str(a) +";")
+                #totalDeValor=resConsulta.fetchone()[0]
+                #res=res+totalDeValor
+             res=resConsulta.fetchone()[0]
+             print "la cantidad de valores  en bucket es "
+             print res
              return res
 
         def entropiaTotal(self,lista):
@@ -385,7 +392,8 @@ class Entropia(Estimator):
                     if entropiaActual >entropiaMaxima:
                         resultado=histogramaCandidato
                         entropiaMaxima=entropiaActual
-
+                #print "los buckets son :"
+                #print listaEntropias
                 copiaBuckets=resultado
                 k=k+1
             self.buckets=copiaBuckets
@@ -395,13 +403,17 @@ class Entropia(Estimator):
 
                 for intervalo in self.buckets:
                     if (intervalo.getBase() <= value) and (intervalo.getTope() > value):
+                        #print value
+                        #intervalo.mostrar()
+                       # print "la cantidad en intervalo es "+ intervalo.getCant()
+                       # print "la cantidad de valores distintos es " +intervalo.getCantDistintos()
                         return intervalo.getCant() *intervalo.getCantDistintos()
-                return 0
+                #return 0
 
         def estimate_greater(self,value):
 
                 for intervalo in self.buckets:
                     if (intervalo.getBase() < value) and (intervalo.getTope() > value):
-                        stimated=value/(intervalo.getTope()-intervalo.getBase())
+                        stimated=value/float((intervalo.getTope()-intervalo.getBase()))
                         return intervalo.getCant() *stimated
                 return 0
