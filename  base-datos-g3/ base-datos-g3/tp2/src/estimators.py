@@ -64,31 +64,34 @@ class ClassicHistogram(Estimator):
 		c = conexion.cursor()
 
 		c.execute("Select min(" + self.column + ") From " + self.table + ";")
-		min = c.fetchone()[0]
+		self.min = c.fetchone()[0]
 
 		c.execute("Select max(" + self.column + ") From " + self.table + ";")
-		max = c.fetchone()[0]
+		self.max = c.fetchone()[0]
 
 		c.execute("Select count(" + self.column + ") From " + self.table + ";")
 		self.total = c.fetchone()[0]
 
-		rango = max - min
+		rango = self.max - self.min
 
 		self.anchoBucket = rango / self.parameter
+		#~ print "min:",self.min," max:",self.max," total:",self.total," rango:",rango," ancho:",self.anchoBucket
 		c.execute("Select " + self.column + " From " + self.table + ";")
 		while True:
 			fila = c.fetchone()
 			if(fila == None):
 				break
 			else:
-				indice = fila[0] / self.anchoBucket
-				if(indice == len(self.buckets)):
-					indice = indice - 1
+				if self.min < 0 :
+					indice = (abs(self.min) + fila[0]) / self.anchoBucket
+				else:
+					indice = fila[0] / self.anchoBucket
+				indice = int(indice)
+				if(len(self.buckets) <= indice):
+					indice = len(self.buckets) - 1
+				#~ print "b: ",self.parameter," - i: ",indice, " - valor: ", fila[0], " - min: ", self.min
 				self.buckets[indice] = self.buckets[indice] + 1
 		conexion.close()
-		acum = 0
-		for b in self.buckets:
-			acum = acum + b
 
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
 		#print self.buckets
@@ -96,17 +99,22 @@ class ClassicHistogram(Estimator):
 
 
 	def estimate_equal(self,value):
-		indice = abs(value) / self.anchoBucket
+		if self.min < 0 :
+			indice = (abs(self.min) + value) / self.anchoBucket
+		else:
+			indice = value / self.anchoBucket
 		indice = int(indice)
-		if(indice == len(self.buckets)):
-			indice = indice - 1
+		if(len(self.buckets) <= indice):
+			indice = len(self.buckets) - 1
 		return (1.0*self.buckets[indice] / self.total)
 
 	def estimate_greater(self,value):
-		indice = abs(value) / self.anchoBucket
-		indice2 = indice
+		if self.min < 0 :
+			indice = (abs(self.min) + value) / self.anchoBucket
+		else:
+			indice = value / self.anchoBucket
 		indice = int(indice)
-		if(indice == len(self.buckets)):
+		if(len(self.buckets) <= indice):
 			return 0
 		acumulador = 0
 		for i in range(indice+1,len(self.buckets)):
@@ -148,22 +156,23 @@ class DistributedSteps(Estimator):
 			else:
 				if(contador == bucketActual):
 					temp2 = fila[0]
-				if(contador < self.anchoBucket):
+				if(contador < (self.anchoBucket-1)):
 					contador = contador + 1
 					temp = fila[0]
 				else:
 					self.buckets[bucketActual] = [temp2,contador+1]
 					contador = 0
 					bucketActual = bucketActual + 1
+					if(bucketActual  == self.parameter):
+						bucketActual = self.parameter - 1
 			contador2 = contador2 + 1
 		conexion.close()
 		#por las dudas, revisar si hace falta
-		#self.buckets[0][0] = self.minimo
-		#self.buckets[len(self.buckets)-1][1] = self.maximo
+		self.buckets[0][0] = self.minimo
+		self.buckets[len(self.buckets)-1][0] = self.maximo
 		#print "Total: " + str(self.total)
 
 		#print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-		#print self.buckets
 		#print testing
 		#print "Suma: " + str(sum(self.buckets))
 
@@ -228,16 +237,20 @@ class DistributedSteps(Estimator):
 						while( self.buckets[s][0] == value ):
 							repeticiones0 = repeticiones0 + 1
 							s = s + 1
-						resultado = 1 - (((1.0 * repeticiones0) - 0.5) / self.parameter)
+						resultado = 1.0 - (((1.0 * repeticiones0) - 0.5) / self.parameter)
 					else:
 						#esta demas
-						resultado = 0
+						resultado = 0	
 				else:
 					if(s == (len(self.buckets)-1)):
-						resultado = (0.5 / self.parameter)
+						#si es el último step
+						#acaaaaaa cae cuando muchos steps
+						resultado = 0
+
 					else:
 						if(self.buckets[s][0] == value):
 							repeticiones = 1
+							primerBucket = s
 							s = s + 1
 							while( self.buckets[s][0] == value ):
 								repeticiones = repeticiones + 1
@@ -247,10 +260,11 @@ class DistributedSteps(Estimator):
 								resultado = 0
 							else:
 								#repeticiones de steps pero no incluye al 1ero ni al ultimo
-								resultado = 1 - ((s - 0.5) / self.parameter) - self.estimate_equal(value)
+								resultado = 1.0 - ((1.0 * primerBucket - 0.5) / self.parameter) - ((1.0 * repeticiones) / self.parameter)
 						else:
 							#Esta entre steps
-							resultado =  1- ((1.0 * s + (1.0/3.0)) / self.parameter) -self.estimate_equal(value)
+							resultado =  1.0 - ((1.0 * (s-1.0) + (1.0/3.0)) / self.parameter) - ((1.0/3.0) / self.parameter)
+							
 		return resultado
 
 
