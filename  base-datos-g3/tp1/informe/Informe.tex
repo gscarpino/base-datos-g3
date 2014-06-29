@@ -126,7 +126,7 @@ Una relacion N:1 sera algo de la forma:
 	\newpage
 	\subsection{DER}
 
-		Separamos el gráfico en dos fragmentos de manera de hacerlo más legible, ambas partes pueden leerse de manera independiente y están centradas en la entidad Legislador.
+		Separamos el gr\'afico en dos fragmentos de manera de hacerlo m\'as legible, ambas partes pueden leerse de manera independiente y est\'an centradas en la entidad Legislador.
 			
 		\begin{figure}[ht]
 		  %\begin{center}
@@ -148,5 +148,59 @@ Una relacion N:1 sera algo de la forma:
 	\subsection{Restricciones}
 	
 		\input{restricciones.tex}
+
+\section{Modelo Relacional}
+
+En esta secci\'on plasmamos el modelo relacional que se deriva del DER anterior. Usamos la notaci\'on que se estudi\'o en el apunte de modernizaci\'on otorgado por la c\'atedra.
+
+	\input{modelo_relacional.tex}
+
+\section{Condiciones asumidas del enunciado}
+
+En esta secci\'on presentamos algunas presunciones que hicimos producto de algunas omisiones en el enunciado o simplemente cosas que hacen al sentido com\'un de la realidad que se pretend\'ia modelar.
+
+\begin{enumerate}
+	\item Asumimos que una Provincia podr\'ia tener menos de 33000 habitantes.
+
+	\item Un bloque representa siempre al mismo partido pol\'itico.
+	\item Las acciones se miden en una cantidad que es un numero entero y tiene un valor en una moneda fija.
+	\item Los votos son por sesi\'on y los presentes votan todos juntos. 
+	\item El empleado que realiza el control de calidad, no es un legislador, ni tampoco lo fue o estuvo como legislador en la historia que guarda el modelo.	
+\end{enumerate}
+
+
+\section{Aclaraciones de diferencias entre el DER, MR y el Schema SQL}
+
+Cuando el equipo se encontr\'o en la tarea de desarrollar las consultas en SQL as\'i como el Schema, se tomaron algunas libertades con el fin de que se m\'as razonable y simple a la hora de hacer las consultas. Estas simplificaciones si bien no hacen grandes cambios a lo que es el modelo pertinente de la realidad, no coinciden en su totalidad con el diagrama DER. 
+
+Algunas de las modificaciones efectuadas fueron:
+
+En el DER se hace distinci\'on entre diputados y senadores, si bien a priori nos resulta muy representativo y modela la realidad que pretend\'iamos, nos encontramos con que en el momento de llevarlo a tablas cont\'abamos con una tabla para legisladores y otras para diputados y senadores con sus foreign keys respectivas. Esto nos pareci\'o un poco molesto y dif\'icil de comprender incluso tal vez a la hora de la correcci\'on por parte del docente, por ello decidimos tener una tabla legislador con el tipo, a pesar de conservar la idea original en el DER. 
+Entendemos no obstante que el tipo NO ES un atributo del legislador ni mucho menos en el DER.
+
+Otro cambio similar es el de las c\'amaras de diputados y senadores, dado que existe una sola c\'amara de cada uno y es evidente que en ellas habr\'a solo senadores o solo diputados, decidimos que la tabla tenga el tipo de c\'amara.
+
+\section{Resolucion de consultas y Schema}
+
+Los scripts con la resoluci\'on de las consultas y creaci\'on de esquemas de tablas est\'an en los archivos:
+
+\begin{itemize}
+
+	\item QUERIES.sql
+	\item SCHEMA.sql
+	\item TRIEGGER.sql
+	\item DATOS.sql
+
+\end{itemize}
+
+No introducimos su contenido aqu\'i debido a que son muy extensos y su finalidad es ser ejecutado en el motor de base de datos. 
+
+\begin{itemize}
+	\item SCHEMA.sql genera la estructura de la base de datos.
+	\item TRIEGGER.sql contiene un triegger que se ejecuta ante la actualizaci\'on de un proyecto. Necesario para la resoluci\'on de una de las consignas.
+	\item DATOS.sql introduce datos generaros aleatoriamente para poder probar la base de datos y las queries solicitadas.
+	\item QUERIES.sql contiene las queries solicitadas por la consigna.
+\end{itemize}
+El orden de ejecuci\'on es el mismo que el orden en que acabamos de exponerlas.
 
 \end{document}
