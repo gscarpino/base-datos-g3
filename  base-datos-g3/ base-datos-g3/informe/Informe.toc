@@ -1,7 +1,0 @@
-\select@language {spanish}
-\contentsline {section}{\numberline {1}Introduccion}{3}{section.1}
-\contentsline {section}{\numberline {2}Modelo entidad Relaci\'on}{3}{section.2}
-\contentsline {section}{\numberline {3}Diagrama Entidad Relaci\'on (DER)}{3}{section.3}
-\contentsline {subsection}{\numberline {3.1}Breve descripcion de las entidades}{3}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}DER}{4}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Restricciones}{5}{subsection.3.3}
