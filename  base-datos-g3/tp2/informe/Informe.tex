@@ -1,0 +1,101 @@
+\documentclass[10pt, a4paper]{article}
+
+%\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[paper=a4paper]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lastpage}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{calc}
+\usepackage{paralist}
+\usepackage{caratula}
+%\usepackage[plain,noline,linesnumberedhidden, noend]{algorithm2e}
+%\usepackage[plain,noline,linesnumbered, noend]{algorithm2e}
+\usepackage[plain,noline,noend]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{float}
+
+
+
+
+
+\newcommand{\f}[1]{\text{#1}}
+\newcommand{\call}[1] {\textsc{#1}}
+\newcommand{\tab}[1]{\Indp \Indp #1 \Indm  \Indm}
+\newcommand{\tabSpace}[1]{\Indp \Indp \; #1 \Indm \Indm \;}
+\newcommand{\si}[2]{ {\bf si} (#1)\; \tab {#2} }
+\newcommand{\sino}[1]{ {\bf sino}\; \tab {#1} }
+\newcommand{\sinosi}[2]{ {\bf sino, si #1}\; \tab {#2} }
+\newcommand{\mientras}[2] {  {\bf mientras} (#1) \; \tabSpace  {#2} }
+\newcommand{\funcion}[3] { 	\KwSty{\call{#1}(#2)}\; \tabSpace  {#3} \KwSty{\call{Fin Funcion}} \newline }
+\newcommand{\funcionConResultado}[4] {      \KwSty{\call{#1}(#2) $\rightarrow$ #3}\; \tabSpace  {#4} \KwSty{\call{Fin Funcion}} \newline }
+\newcommand{\porcada}[3] { {\bf por cada } #1 {\bf en} #2 \; \tabSpace {#3} }
+\newcommand{\para}[4] { {\bf para } #1 {\bf desde} #2 {\bf hasta} #3\; \{ \; \tab{#4}\}\; }
+\newcommand{\paracada}[3] { {\bf para cada } #1 {\bf $\in$} #2 \; \tabSpace {#3} }
+\newcommand{\devolver}[1] { {\bf devolver} #1\;}
+
+
+
+\sloppy
+
+
+\hypersetup{%
+ % Para que el PDF se abra a pagina completa.
+ pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+ pdfauthor={Bases de Datos - DC - UBA},
+ pdfkeywords={Trabajo Práctico 2},
+ pdfsubject={}
+}
+
+\parskip=5pt % 10pt es el tama\~no de fuente
+
+% Pongo en 0 la distancia extra entre itemes.
+\let\olditemize\itemize
+\def\itemize{\olditemize\itemsep=0pt}
+
+% Acomodo fancyhdr.
+\pagestyle{fancy}
+\thispagestyle{fancy}
+\addtolength{\headheight}{1pt}
+\lhead{Base de Datos}
+\rhead{TP2 - Grupo 3}
+\cfoot{\thepage /\pageref{LastPage}}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\author{Base de Datos, DC, UBA.}
+\date{}
+\title{}
+
+\begin{document}
+
+%Pagina de titulo e indice
+\thispagestyle{empty}
+\materia{Base de Datos}
+\submateria{TP2}
+\titulo{}
+\grupo{Grupo 3}
+\integrante{Martín Celave}{aaa/08}{a@gmail.com}
+\integrante{Sergio Gonz\'alez}{723/10}{sergiogonza90@gmail.com}
+\integrante{Gino Scarpino}{392/08}{gino.scarpino@gmail.com}
+\maketitle
+
+\tableofcontents
+
+\SetAlgoSkip{bigskip}
+\NoCaptionOfAlgo
+\DontPrintSemicolon
+\SetAlFnt{\ttfamily}
+
+\newpage
+
+\section{Introducci\'on}
+
+
+\end{document}
