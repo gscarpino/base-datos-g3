@@ -7,6 +7,7 @@ CREATE TRIGGER convertir_proyecto_en_ley AFTER UPDATE ON Proyecto_de_ley
 	BEGIN
 		DECLARE votos_positivos INT;
 		DECLARE votos_negativos INT;
+		DECLARE fechaSancionada INT;
 		IF OLD.estado_votaciones in ('M') and NEW.estado_votaciones = 'C'
 		THEN
 			SET votos_positivos = ( SELECT count(1) 
@@ -17,11 +18,11 @@ CREATE TRIGGER convertir_proyecto_en_ley AFTER UPDATE ON Proyecto_de_ley
 									  FROM Votan v
 									 WHERE v.titulo_proyecto_ley = NEW.titulo_proyecto_ley
 									   AND (v.id_voto = 10 OR v.id_voto = 11));
-			
 			IF votos_positivos > votos_negativos
 			THEN
+				SET fechaSancionada = (SELECT max(v.fecha) FROM Votan v WHERE v.titulo_proyecto_ley = NEW.titulo_proyecto_ley);
 				INSERT INTO Ley(titulo_ley, fecha_sancionada, titulo_proyecto_ley)
-				VALUES (NEW.titulo_proyecto_ley, CURRENT_DATE(), NEW.titulo_proyecto_ley);
+				VALUES (NEW.titulo_proyecto_ley, fechaSancionada, NEW.titulo_proyecto_ley);
 			END IF;
 		END IF;
 	END$$
