@@ -1,27 +1,13 @@
 
 
 -- Diputados que solo votaron positivo o ausente en los proyectos de ley de la comisión que integran
--- dni de diputados que votaron positivo en todos los proyectos de ley de las comisiones que integra.
-SELECT votos.dni 
-	FROM Votan votos
-	WHERE 
-		(SELECT e.titulo_proyecto_ley
-			FROM Estudia e
-			WHERE votos.titulo_proyecto_ley = e.titulo_proyecto_ley AND votos.dni IN (SELECT pec.dni_legislador
-																						FROM Participa_en_comision pec 
-																						WHERE pec.nombre_comision= e.nombre_comision
-																						AND votos.id_voto IN (SELECT v.id_voto
-																												FROM  Voto v
-																												WHERE tipo LIKE 'P%')));
--- dni de diputados que estuvieron ausentes en todos los proyectos de ley de las comisiones que integra.	
---diputados tal que no existe un proyecto de ley ni comision en la que participe el diputado y haya sido estudiada por el proyecto de ley.
-SELECT leg.dni
-FROM Legislador leg
-WHERE NOT EXISTS (SELECT e.titulo_proyecto_ley
-				FROM Estudia e
-				WHERE e.nombre_comision IN (SELECT pec.nombre_comision
-												FROM Participa_en_comision pec 
-												WHERE pec.dni_legislador= leg.dni));
+select distinct leg.nombre, leg.dni
+from estudia est, proyecto_de_ley pro, participa_en_comision part, legislador leg
+where est.titulo_proyecto_ley = pro.titulo_proyecto_ley and est.nombre_comision = part.nombre_comision
+	and part.fecha_inicio_participacion <= pro.fecha and part.fecha_fin_participacion >= pro.fecha
+	and part.dni_legislador = leg.dni and not exists
+		(select vot.dni from votan vot where pro.titulo_proyecto_ley = vot.titulo_proyecto_ley and vot.dni = leg.dni
+			and vot.id_voto in (10,11,20,21));
 															 
 -- Cantidad de leyes promulgadas en cada sesión en los últimos tres años
 	-- | sesión | cantidad de leyes promulgadas|
