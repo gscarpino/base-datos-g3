@@ -23,6 +23,7 @@ CREATE TRIGGER convertir_proyecto_en_ley AFTER UPDATE ON Proyecto_de_ley
 				SET fechaSancionada = (SELECT max(v.fecha) FROM Votan v WHERE v.titulo_proyecto_ley = NEW.titulo_proyecto_ley);
 				INSERT INTO Ley(titulo_ley, fecha_sancionada, titulo_proyecto_ley)
 				VALUES (NEW.titulo_proyecto_ley, fechaSancionada, NEW.titulo_proyecto_ley);
+				DELETE FROM Proyecto_de_ley WHERE titulo_proyecto_ley = New.titulo_proyecto_ley;
 			END IF;
 		END IF;
 	END$$
