@@ -9,7 +9,7 @@ CREATE TABLE Legislador(
 	nombre VARCHAR(80),
 	fecha_nacimiento DATE,
 	id_bloque_politico INTEGER,
-	provincia VARCHAR(40),
+	nombre_provincia VARCHAR(40),
 	tipo CHAR(1),
 	PRIMARY KEY (dni)
 );
@@ -62,8 +62,10 @@ CREATE TABLE Sesion(
 );
 
 CREATE TABLE Comision(
+	id_comision	INTEGER NOT NULL,
 	nombre_comision VARCHAR(30) NOT NULL,
-	PRIMARY KEY (nombre_comision)
+	dni_informante VARCHAR(8) NOT NULL,
+	PRIMARY KEY (id_comision)
 );
 
 CREATE TABLE Voto(
@@ -76,7 +78,7 @@ CREATE TABLE Voto(
 CREATE TABLE Proyecto_de_ley(
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
 	fecha DATE,
-	id_camara INTEGER,
+	id_camara_originaria INTEGER,
 	estado_votaciones CHAR(1),
 	PRIMARY KEY (titulo_proyecto_ley)
 );
@@ -84,9 +86,9 @@ CREATE TABLE Proyecto_de_ley(
 CREATE TABLE Ley(
 	numeracion INTEGER NOT NULL AUTO_INCREMENT,
 	titulo_ley VARCHAR(50) NOT NULL,
-	fecha_sancionada DATE,
+	fecha_sancionada DATE NOT NULL,
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
-	PRIMARY KEY (numeracion,titulo_ley)
+	PRIMARY KEY (numeracion, titulo_ley, fecha_sancionada)
 );
 
 CREATE TABLE Control_de_calidad(
@@ -105,7 +107,7 @@ CREATE TABLE Vicepresidente(
 
 -- Tablas de relaciones N:M
 
-CREATE TABLE Bienes_del_legislador(
+CREATE TABLE Es_propietario_de(
 	dni_legislador VARCHAR(8) NOT NULL,
 	id_bien_economico INTEGER NOT NULL,
 	fecha_obtencion DATE NOT NULL,
@@ -113,7 +115,7 @@ CREATE TABLE Bienes_del_legislador(
 	PRIMARY KEY (dni_legislador, id_bien_economico, fecha_obtencion)
 );
 
-CREATE TABLE Periodos_del_legislador(
+CREATE TABLE Legisla_durante(
 	dni_legislador VARCHAR(8) NOT NULL,
 	fecha_inicio DATE NOT NULL, 
 	fecha_fin DATE NOT NULL,
@@ -121,9 +123,11 @@ CREATE TABLE Periodos_del_legislador(
 );
 
 CREATE TABLE Asiste_sesion(
-	dni_legislador VARCHAR(8) NOT NULL,  -- debo poner la fk
+	dni_legislador VARCHAR(8) NOT NULL,
+	idSesion INTEGER NOT NULL,
 	fecha_inicio_sesion DATE NOT NULL, 
 	fecha_fin_sesion DATE NOT NULL,
+	idCamara INTEGER NOT NULL,
 	PRIMARY KEY (dni_legislador, fecha_inicio_sesion, fecha_fin_sesion)
 );
 
@@ -131,8 +135,8 @@ CREATE TABLE Participa_en_comision(
 	dni_legislador VARCHAR(8) NOT NULL, 
 	fecha_inicio_participacion DATE NOT NULL, 
 	fecha_fin_participacion DATE NOT NULL,
-	nombre_comision VARCHAR(30) NOT NULL, 
-	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion,nombre_comision)
+	id_comision INTEGER NOT NULL, 
+	PRIMARY KEY (dni_legislador, fecha_inicio_participacion, fecha_fin_participacion, id_comision)
 );
 
 CREATE TABLE Preside_bloque(
@@ -145,17 +149,17 @@ CREATE TABLE Preside_bloque(
 
 
 CREATE TABLE Estudia(
-	nombre_comision VARCHAR(30) NOT NULL, 
+	id_comision INTEGER NOT NULL, 
 	titulo_proyecto_ley VARCHAR(50) NOT NULL,
-	PRIMARY KEY (nombre_comision, titulo_proyecto_ley)
+	PRIMARY KEY (id_comision, titulo_proyecto_ley)
 );
 
 CREATE TABLE Preside_comision(
-	nombre_comision VARCHAR(30) NOT NULL, 
+	id_comision INTEGER NOT NULL, 
 	dni_diputado VARCHAR(8) NOT NULL, 
 	fecha_inicio_preside DATE NOT NULL, 
 	fecha_fin_preside DATE NOT NULL,
-	PRIMARY KEY (nombre_comision, dni_diputado,fecha_inicio_preside,fecha_fin_preside)
+	PRIMARY KEY (id_comision, dni_diputado,fecha_inicio_preside,fecha_fin_preside)
 );
 
 CREATE TABLE Preside_camara_senadores(
@@ -181,7 +185,7 @@ ALTER TABLE Legislador
 		REFERENCES Bloque_politico (id_bloque_politico),
 
 	ADD CONSTRAINT `fk_provincia`
-	FOREIGN KEY (provincia)
+	FOREIGN KEY (nombre_provincia)
 		REFERENCES Provincia (nombre);
 
 ALTER TABLE Bloque_politico 
@@ -199,7 +203,7 @@ ALTER TABLE Control_de_calidad
 	FOREIGN KEY (titulo_proyecto_ley)
 		REFERENCES Proyecto_de_ley (titulo_proyecto_ley);
 
-ALTER TABLE Bienes_del_legislador
+ALTER TABLE Es_propietario_de
 	ADD CONSTRAINT `fk_legislador_bien`
 	FOREIGN KEY (dni_legislador)
 		REFERENCES Legislador (dni),
@@ -208,7 +212,7 @@ ALTER TABLE Bienes_del_legislador
 	FOREIGN KEY (id_bien_economico)
 		REFERENCES Bien_economico (id_bien_economico);
 
-ALTER TABLE Periodos_del_legislador
+ALTER TABLE Legisla_durante
 	ADD CONSTRAINT `fk_legislador_periodo`
 	FOREIGN KEY (dni_legislador)
 		REFERENCES Legislador (dni),
@@ -232,8 +236,13 @@ ALTER TABLE	Participa_en_comision
 		REFERENCES Legislador (dni),
 	
 	ADD CONSTRAINT `fk_participa_comision`
-	FOREIGN KEY (nombre_comision)
-		REFERENCES Comision (nombre_comision);
+	FOREIGN KEY (id_comision)
+		REFERENCES Comision (id_comision);
+
+ALTER TABLE	Comision
+	ADD CONSTRAINT `fk_informante`
+	FOREIGN KEY (dni_informante)
+		REFERENCES Legislador (dni);
 		
 ALTER TABLE Preside_bloque
 	ADD CONSTRAINT `fk_preside_bloque_legislador`
@@ -246,8 +255,8 @@ ALTER TABLE Preside_bloque
 		
 ALTER TABLE	Estudia
 	ADD CONSTRAINT `fk_estudia_comision`
-	FOREIGN KEY (nombre_comision)
-		REFERENCES Comision(nombre_comision),
+	FOREIGN KEY (id_comision)
+		REFERENCES Comision(id_comision),
 	
 	ADD CONSTRAINT `fk_estudia_proyecto`
 	FOREIGN KEY (titulo_proyecto_ley)
@@ -255,8 +264,8 @@ ALTER TABLE	Estudia
 
 ALTER TABLE	Preside_comision
 	ADD CONSTRAINT `fk_comision_presidida`
-	FOREIGN KEY (nombre_comision)
-		REFERENCES Comision(nombre_comision),
+	FOREIGN KEY (id_comision)
+		REFERENCES Comision(id_comision),
 	
 	ADD CONSTRAINT `fk_diputado_presidente`
 	FOREIGN KEY (dni_diputado)
@@ -264,7 +273,7 @@ ALTER TABLE	Preside_comision
 
 ALTER TABLE	Proyecto_de_ley
 	ADD CONSTRAINT `fk_camara_originaria`
-	FOREIGN KEY (id_camara)
+	FOREIGN KEY (id_camara_originaria)
 		REFERENCES Camara(id_camara);		
 
 ALTER TABLE Preside_camara_senadores 
@@ -312,5 +321,5 @@ ALTER TABLE Camara
 ALTER TABLE Proyecto_de_ley
 	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('A','M','C'));
 	
-ALTER TABLE Bienes_del_legislador
+ALTER TABLE Es_propietario_de
 	ADD CONSTRAINT `check_tipo_bien` CHECK (tipo in('A','S','I'));
