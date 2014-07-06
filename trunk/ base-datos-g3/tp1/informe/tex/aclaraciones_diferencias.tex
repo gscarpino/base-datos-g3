@@ -1,0 +1,8 @@
+Cuando el equipo se encontr\'o en la tarea de desarrollar las consultas en SQL as\'i como el Schema, se tomaron algunas libertades con el fin de que se m\'as razonable y simple a la hora de hacer las consultas. Estas simplificaciones si bien no hacen grandes cambios a lo que es el modelo pertinente de la realidad, no coinciden en su totalidad con el diagrama DER. 
+
+Algunas de las modificaciones efectuadas fueron:
+
+En el DER se hace distinci\'on entre diputados y senadores, si bien a priori nos resulta muy representativo y modela la realidad que pretend\'iamos, nos encontramos con que en el momento de llevarlo a tablas cont\'abamos con una tabla para legisladores y otras para diputados y senadores con sus foreign keys respectivas. Esto nos pareci\'o un poco molesto y dif\'icil de comprender incluso tal vez a la hora de la correcci\'on por parte del docente, por ello decidimos tener una tabla legislador con el tipo, a pesar de conservar la idea original en el DER. 
+Entendemos no obstante que el tipo NO ES un atributo del legislador ni mucho menos en el DER.
+
+Otro cambio similar es el de las c\'amaras de diputados y senadores, dado que existe una sola c\'amara de cada uno y es evidente que en ellas habr\'a solo senadores o solo diputados, decidimos que la tabla tenga el tipo de c\'amara.

@@ -1,0 +1,149 @@
+En esta secci\'on plasmamos el modelo relacional que se deriva del DER anterior. Usamos la notaci\'on que se estudi\'o en el apunte de modernizaci\'on otorgado por la c\'atedra.
+
+Provincia(\underline{nombre}, Habitantes):
+
+PK={\{nombre}\}\\
+
+Legislador(\underline{DNI}, nombre,edad):
+
+PK={\{DNI}\}\\
+
+Senador(\underline{DNI}):
+
+PK=FK=CK={\{DNI}\}\\
+
+Diputado(\underline{DNI}):
+
+PK=FK=CK={\{DNI}\}\\
+
+BienEconomico(\underline{IdBienEco},valor,tipo):
+
+PK={\{IdBienEco}\}\\
+
+Sociedad(\underline{IdBienEco}):
+
+PK=FK=CK={\{IdBienEco}\}\\
+
+Inmueble(\underline{IdBienEco}, Direccion):
+
+PK=FK=CK={\{IdBienEco}\}\\
+
+Accion(\underline{IdBienEco}, Cantidad):
+
+PK=FK=CK={\{IdBienEco}\}\\
+
+Periodo(\underline{FechaInicio},\underline{FechaFin})
+
+PK=FK=CK={\{FechaInicio,FechaFin }\}\\
+
+BloquePolitico(\underline{IdBloque},Nombre ):
+
+PK={\{IdBloque}\}\\
+
+PartidoPolitico(\underline{idPartido}, Nombre)
+
+PK={\{idPartido}\}\\
+
+EsPropietarioDe(\underline{DNI}, \underline{IdBienEconomico}, \underline{FechaInicio},FechaFin)
+
+PK=CK=FK={\{(DNI, IdBienEconomico, FechaInicio, FechaFin) }\}
+
+Periodo(fechaInicio,fechaFin)
+
+PK={\{fechaInicio,fechaFin}\}\\
+
+LegislaDurante(\underline{DNI},\underline{fechaInicio},\underline{fechaFin}):
+
+PK=CK=FK={\{(DNI,fechaInicio,fechaFin)}\}\\
+
+Sesion(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin})
+
+PK={\{idSesion, fechaInicio,fechaFin }\}\\
+
+Preparatoria(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin})
+
+PK=CK=FK={\{idSesion, fechaInicio,fechaFin }\}\\
+
+Ordinaria(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin})
+
+PK=CK=FK={\{idSesion, fechaInicio,fechaFin }\}\\
+
+Prorroga(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin}, Dias extendidos)
+
+PK=CK=FK={\{idSesion, fechaInicio,fechaFin }\}\\
+
+AsisteASesion(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin}, \underline{DNI})
+
+PK=CK=FK=(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin}, \underline{DNI})\\
+
+Comision(\underline{idComision}, Nombre Comision):
+
+PK= {\{idComision}\}\\
+
+ParticipaEnComision(FechaInicio,fechaFin,\underline{idComision},\underline{DNI})
+
+PK=CK={\{(FechaInicio,fechaFin,idComision,DNI)}\}
+
+FK={\{idComision,DNI}\}\\
+
+PresideComision(\underline{fechaInicio},\underline{fechaFin},\underline{DNI},\underline{idComision}):
+
+PK=CK={\{(fechaInicio,fechaFin,DNI,idComision)}\}
+
+FK={\{idComision,DNI}\}\\
+
+PresideBloque(\underline{fechaInicio},\underline{fechaFin},\underline{DNI},\underline{IdBloque}):
+
+PK=CK={\{(fechaInicio,fechaFin,DNI,IdBloque)}\}
+
+FK={\{IdBloque,DNI}\}\\
+
+Voto(\underline{IdVoto}):
+
+PK=CK={\{IdVoto, tipo, resultado}\}\\
+
+Positivo(\underline{IdVoto}):
+
+PK=FK=CK={\{IdVoto}\}\\
+
+Negativo(\underline{IdVoto}):
+
+PK=FK=CK={\{IdVoto}\}\\
+
+Abstencion(\underline{IdVoto}):
+
+PK=FK=CK={\{IdVoto}\}\\
+
+Electronico(\underline{IdVoto}):
+
+PK=FK=CK={\{IdVoto}\}\\
+
+Nominal(\underline{IdVoto}):
+
+PK=FK=CK={\{IdVoto}\}\\
+
+ProyectoDeLey(\underline{Titulo},fecha,estadoVotaciones):
+
+PK=CK={\{titulo}\}\\
+
+Votan(\underline{IdVoto},\underline{DNI},\underline{TituloProyecto},fecha)
+
+PK=CK=FK{\{(IdVoto,DNI,TituloProyecto)}\}\\
+
+Ley(\underline{Numeracion},\underline{fechaSancionada},\underline{Titulo}):
+
+PK=CK{\{Numeracion,Titulo,fechaSancionada\}\\
+
+VicePresidenteNacional(\underline{nombre})
+
+PK=CK={\{nombre}\}\\
+
+ControlCalidad(\underline{ID},empleado,\underline{TituloProyecto})
+
+PK=CK={\{ID, TituloProyecto}\}
+
+FK={\{TituloProyecto}\}\\
+
+Estudia(\underline{TituloProyecto},\underline{idComision})
+
+PK=CK=FK={\{(TituloProyecto,idComision)}\}\\	

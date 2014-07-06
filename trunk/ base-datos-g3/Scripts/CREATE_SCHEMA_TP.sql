@@ -310,7 +310,7 @@ ALTER TABLE Camara
 	ADD CONSTRAINT `check_tipo_camara` CHECK (tipo in('S','D'));
 
 ALTER TABLE Proyecto_de_ley
-	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('A','M','C'));
+	ADD CONSTRAINT `check_estado_votaciones` CHECK (estado_votaciones in('Iniciadas', 'Media sancion', 'Finalizadas'));
 	
 ALTER TABLE Bienes_del_legislador
 	ADD CONSTRAINT `check_tipo_bien` CHECK (tipo in('A','S','I'));
