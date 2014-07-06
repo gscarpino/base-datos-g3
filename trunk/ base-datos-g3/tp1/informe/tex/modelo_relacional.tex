@@ -68,7 +68,7 @@ Ordinaria(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin})
 
 PK=CK=FK={\{idSesion, fechaInicio,fechaFin }\}\\
 
-Prorroga(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin}, Dias extendidos)
+Prorroga(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin})
 
 PK=CK=FK={\{idSesion, fechaInicio,fechaFin }\}\\
 
@@ -76,9 +76,11 @@ AsisteASesion(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin}
 
 PK=CK=FK=(\underline{idSesion}, \underline{fechaInicio},\underline{fechaFin}, \underline{DNI})\\
 
-Comision(\underline{idComision}, Nombre Comision):
+Comision(\underline{idComision}, Nombre Comision, dniInformante):
 
-PK= {\{idComision}\}\\
+PK={\{idComision}\}
+
+FK={\{dniInformante}\}
 
 ParticipaEnComision(FechaInicio,fechaFin,\underline{idComision},\underline{DNI})
 
