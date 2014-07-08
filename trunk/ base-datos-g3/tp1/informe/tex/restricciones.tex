@@ -1,29 +1,33 @@
 \begin{itemize}
 	\item El atributo edad de cada legislador que sea diputado es de por lo menos 25.
-	\item El atributo edad  de cada legislador en la c\'amara de senadores es de al menos 30.
-	\item En la c\'amara de senadores no puede haber ni mas ni menos de 3 representantes por provincia.
-	\item La fecha de inicio de cargo de ser menor a la fecha de fin de cargo.
-	\item No puede haber un legislador que sea legislador y diputado en periodos de
+	\item El atributo edad de cada legislador que sea senador es de al menos 30.
+	\item En la c\'amara de senadores hay exactamente 3 representantes por provincia.
+	\item La fecha de inicio de en el cargo es menor a la fecha de fin de cargo.
+	\item No puede haber un legislador que sea senador y diputado en periodos de
 	 inicio de periodo y fin periodo solapados.
 	
 	\item En todas las relaciones que tengan fechas como atributos las fechas de inicio
 	 deben ser anteriores a las de fin.
 	
-	\item La cantidad de comisiones que la c\'amara de diputados es de 45.
+	\item La cantidad de comisiones que la c\'amara de diputados es 45.
 	
-	\item La fecha de una inicio y fin de una sesi\'on puede estar entre el 1 de marzo al 30 de noviembre de un mismo a\~no.
+	\item Las fechas de inicio y fin de una sesi\'on peraratoria u ordinaria tienen que ser entre el 1 de marzo al 30 de noviembre de un mismo a\~no.
 	
-	\item La suma de los votos totales de un proyecto de ley aprobado es igual a la suma de todos los legisladores que son diputados y todos los legisladores que son senadores, que estuvieron presentes en las sesiones.
+	\item Una c\'amara que haga una sesi\'on y vote un cierto proyecto, todos los legisladores de esa c\'amara votan en la fecha de esa sesi\'on o est\'an ausentes. Por lo que cada legislador que figura en la realci\'on Votan asiste en esa sesi\'on en \textit{Asiste a sesi\'on} con esa fecha. Si est\'a ausente un legislador, entonces no existe tupla en la relaci\'on \textit{Votan} con ese legislador.
+	
+	\item La cantidad de votos de un proyecto en una votaci\'on es igual a la cantidad de tuplas existentes en la relaci\'on Votan para ese proyecto. La cantidad de votos por c\'amara depender\'a del tipo de legislador.
+	
+	\item La fecha de sancionada de una Ley tiene que ser la fecha de la sesi\'on \'ultima sesi\'on donde se la vot\'o. Por lo que, tiene que haber exactamente dos sesiones, una por cada c\'amara, donde se vota al proyecto sancionado.
+	
+	\item A lo sumo hay dos sesiones donde se vota un proyecto de ley.
 	
 	\item Todos los legisladores que componen la c\'amara de diputados, son diputados y todos los que componen la c\'amara de senadores son senadores.
+
+	\item La cantidad de legisladores que asiste a cada sesi\'on es menor o igual a la cantidad de legisladores que componen la c\'amara de diputados o la cantidad de legisladores que componen la c\'amara senadores dependiendo que c\'amara haga la sesi\'on.
 	
-	\item La cantidad de senadores en la c\'amara de senadores es de 3\* cantidad de provincias.
+	\item Si un legislador tiene m\'as de 15 ausencias hasta una determinada fecha f en un a\~no, entonces no puede haber una tupla en la relaci\'on \textit{Votan} que figure ese legislador y con una fecha posterior a f. Siempre y cuando sea en el a\~no donde acumula 15 ausencias. Se \textit{resetean} al comenzar el per\'iodo legislativo.
 	
-	\item La cantidad de legisladores que asiste a cada sesi\'on es menor o igual a la cantidad de legisladores que componen la c\'amara de diputados o la cantidad de legisladores que componen la c\'amara senadores.
-	
-	\item Si un legislador ``l'' tiene mas de 15 ausencias hasta determinada fecha, entonces no puede haber una tupla de la forma (l,s) en la relaci\'on asiste donde ``s'' es una sesi\'on, con fecha dentro del periodo de actividad del legislador.
-	
-	\item Los atributos fecha de inicio y fecha fin de participaci\'on en comisiones, presidencia de bloques o bien presidencia de comisiones deben estar incluidas en el periodo de de inicio y fin que tiene como legislador.
+	\item Los atributos fecha de inicio y fecha fin de participaci\'on en comisiones, presidencia de bloques o bien presidencia de comisiones deben estar incluidas en el per\'iodo de de inicio y fin que tiene como legislador.
 	
 	\item Si un diputado d, preside una comisi\'on c, en una fecha de inicio i, y fin d. Entonces no existen dos tuplas t1 y t2 en la relaci\'on preside de la forma(d,c) con fechas de inicio y fin solapadas. Es decir un diputado solo puede presidir una comisi\'on a la vez.
 
