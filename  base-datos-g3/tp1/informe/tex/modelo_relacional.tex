@@ -1,6 +1,6 @@
 En esta secci\'on plasmamos el modelo relacional que se deriva del DER anterior. Usamos la notaci\'on que se estudi\'o en el apunte de modelizaci\'on otorgado por la materia.
 
-Legislador(\underline{DNI}, Nombre, Edad, \dashuline{idBloquePolitico}, \dashuline{nombreProvincia}, tipo):
+Legislador(\underline{DNI}, Nombre, fechaDeNacimiento, \dashuline{idBloquePolitico}, \dashuline{nombreProvincia}, tipo):
 
 PK=CK={\{DNI}\}
 
@@ -14,19 +14,21 @@ Diputado(\underline{DNI}):
 
 PK=FK=CK={\{DNI}\}\\
 
-C\'amara(\underline{idCamara}, tipo, \dashuline{dniPresidente}):
+C\'amara(\underline{idCamara}, tipo):
 
-PK=CK={\{idCamara}\}
+PK=CK={\{idCamara}\} \\
+
+C\'amaraDiputados(\underline{\dashuline{idCamara}}, \dashuline{dniPresidente}):
+
+PK=CK={\{idCamara}\} 
 
 FK={\{ dniPresidente }\} \\
 
-C\'amaraDiputados(\underline{idCamara}):
+C\'amaraSenadores(\underline{\dashuline{idCamara}}, \dashuline{dniPresidente}):
 
 PK=CK={\{idCamara}\} \\
 
-C\'amaraSenadores(\underline{idCamara}):
-
-PK=CK={\{idCamara}\} \\
+FK={\{ dniPresidente }\} \\
 
 BloquePolitico(\underline{idBloquePolitico}, \dashuline{idPartidoPolitico}, Nombre):
 
@@ -70,7 +72,7 @@ FK={\{dniLegislador, IdBienEconomico}\}\\
 
 LegislaDurante(\underline{\dashuline{DNI}},\underline{\dashuline{(fechaInicio,fechaFin)}}):
 
-PK=CK=FK={\{(DNI,(fechaInicio,fechaFin)}\}\\
+PK=CK=FK={\{DNI,(fechaInicio,fechaFin)}\}\\
 
 Sesion(\underline{fechaInicio},\underline{fechaFin}, \underline{\dashuline{idCamara}}, tipo)
 
@@ -118,11 +120,9 @@ PK=CK={\{(fechaInicio,fechaFin,DNI,IdBloquePolitico)}\}
 
 FK={\{IdBloquePolitico,DNI}\}\\
 
-Voto(\underline{IdVoto}):
+Voto(\underline{IdVoto}, tipo, resultado ):
 
-CK={\{IdVoto, (tipo, resultado)}\}
-
-PK={\{ IdVoto }\} \\
+PK=CK={\{ IdVoto }\} \\
 
 Positivo(\underline{\dashuline{IdVoto}}):
 
@@ -150,7 +150,7 @@ PK=CK={\{Titulo}\}
 
 FK={\{idCamaraOriginaria}\} \\
 
-Votan(IdVoto, \underline{\dashuline{DNI}},\underline{\dashuline{TituloProyecto}},fecha)
+Votan(\dashuline{IdVoto}, \underline{\dashuline{DNI}},\underline{\dashuline{TituloProyecto}},fecha)
 
 PK=CK{\{(DNI,TituloProyecto)}\}
 
@@ -175,3 +175,7 @@ FK={\{TituloProyecto}\}\\
 Estudia(\underline{\dashuline{TituloProyecto}},\underline{\dashuline{idComision}})
 
 PK=CK=FK={\{(TituloProyecto,idComision)}\}\\
+
+PresideCamaraSenadores(\underline{\dashuline{idCamara}}, \underline{\dashuline{dniPresidente}})
+
+PK=CK=FK={\{(idCamara, dniPresidente)\}}

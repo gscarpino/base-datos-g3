@@ -15,8 +15,19 @@ CREATE TABLE Legislador(
 );
 
 CREATE TABLE Camara(
-	id_camara INTEGER,
+	id_camara INTEGER NOT NULL,
 	tipo CHAR(1),
+	PRIMARY KEY (id_camara)
+);
+
+CREATE TABLE Camara_diputados(
+	id_camara INTEGER NOT NULL,
+	dni_presidente VARCHAR(8) NOT NULL,
+	PRIMARY KEY (id_camara)
+);
+
+CREATE TABLE Camara_senadores(
+	id_camara INTEGER NOT NULL,
 	dni_presidente VARCHAR(8) NOT NULL,
 	PRIMARY KEY (id_camara)
 );
@@ -57,8 +68,8 @@ CREATE TABLE Sesion(
 	fecha_inicio_sesion DATE NOT NULL,
 	fecha_fin_sesion DATE NOT NULL,
 	tipo CHAR(1) NOT NULL,
-	camara INTEGER NOT NULL,
-	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion,camara)
+	id_camara INTEGER NOT NULL,
+	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion,id_camara)
 );
 
 CREATE TABLE Comision(
@@ -186,6 +197,24 @@ ALTER TABLE Legislador
 	FOREIGN KEY (nombre_provincia)
 		REFERENCES Provincia (nombre);
 
+ALTER TABLE Camara_diputados
+	ADD CONSTRAINT `fk_dni_presidente_dip`
+	FOREIGN KEY (dni_presidente)
+		REFERENCES Legislador (dni),
+		
+	ADD CONSTRAINT `fk_camara_dip`
+	FOREIGN KEY (id_camara)
+		REFERENCES Camara (id_camara);
+
+ALTER TABLE Camara_senadores
+	ADD CONSTRAINT `fk_dni_presidente_sen`
+	FOREIGN KEY (dni_presidente)
+		REFERENCES Vicepresidente (dni),
+		
+	ADD CONSTRAINT `fk_camara_sen`
+	FOREIGN KEY (id_camara)
+		REFERENCES Camara (id_camara);		
+		
 ALTER TABLE Bloque_politico 
 	ADD CONSTRAINT `fk_partido_politico`
 	FOREIGN KEY (id_partido_politico)
@@ -244,7 +273,7 @@ ALTER TABLE	Comision
 
 ALTER TABLE	Sesion
 	ADD CONSTRAINT `fk_camara_origen`
-	FOREIGN KEY (camara)
+	FOREIGN KEY (id_camara)
 		REFERENCES Camara (id_camara);
 		
 ALTER TABLE Preside_bloque
