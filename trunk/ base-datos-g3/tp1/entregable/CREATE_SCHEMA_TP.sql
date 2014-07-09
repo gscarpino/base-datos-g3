@@ -58,6 +58,12 @@ CREATE TABLE Bien_economico(
 	PRIMARY KEY (id_bien_economico)
 );
 
+CREATE TABLE Inmueble(
+	id_bien_economico INTEGER NOT NULL,
+	direccion VARCHAR(50), 
+	PRIMARY KEY (id_bien_economico)
+);
+
 CREATE TABLE Periodo(
 	fecha_inicio DATE,
 	fecha_fin DATE,
@@ -197,6 +203,11 @@ ALTER TABLE Legislador
 	FOREIGN KEY (nombre_provincia)
 		REFERENCES Provincia (nombre);
 
+ALTER TABLE Inmueble
+	ADD CONSTRAINT `fk_bien_economico_padre`
+	FOREIGN KEY (id_bien_economico)
+		REFERENCES Bien_economico (id_bien_economico);
+		
 ALTER TABLE Camara_diputados
 	ADD CONSTRAINT `fk_dni_presidente_dip`
 	FOREIGN KEY (dni_presidente)
