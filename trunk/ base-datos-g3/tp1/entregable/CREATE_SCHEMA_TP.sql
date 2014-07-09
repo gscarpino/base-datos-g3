@@ -57,12 +57,12 @@ CREATE TABLE Sesion(
 	fecha_inicio_sesion DATE NOT NULL,
 	fecha_fin_sesion DATE NOT NULL,
 	tipo CHAR(1) NOT NULL,
-	camara CHAR(1) NOT NULL,
+	camara INTEGER NOT NULL,
 	PRIMARY KEY (fecha_inicio_sesion,fecha_fin_sesion,camara)
 );
 
 CREATE TABLE Comision(
-	id_comision	INTEGER NOT NULL,
+	id_comision	INTEGER NOT NULL AUTO_INCREMENT,
 	nombre_comision VARCHAR(30) NOT NULL,
 	dni_informante VARCHAR(8) NOT NULL,
 	PRIMARY KEY (id_comision)
@@ -124,10 +124,8 @@ CREATE TABLE Legisla_durante(
 
 CREATE TABLE Asiste_sesion(
 	dni_legislador VARCHAR(8) NOT NULL,
-	idSesion INTEGER NOT NULL,
 	fecha_inicio_sesion DATE NOT NULL, 
 	fecha_fin_sesion DATE NOT NULL,
-	idCamara INTEGER NOT NULL,
 	PRIMARY KEY (dni_legislador, fecha_inicio_sesion, fecha_fin_sesion)
 );
 
@@ -243,6 +241,11 @@ ALTER TABLE	Comision
 	ADD CONSTRAINT `fk_informante`
 	FOREIGN KEY (dni_informante)
 		REFERENCES Legislador (dni);
+
+ALTER TABLE	Sesion
+	ADD CONSTRAINT `fk_camara_origen`
+	FOREIGN KEY (camara)
+		REFERENCES Camara (id_camara);
 		
 ALTER TABLE Preside_bloque
 	ADD CONSTRAINT `fk_preside_bloque_legislador`
