@@ -2,14 +2,14 @@
 	\item El atributo edad de cada legislador que sea diputado es de por lo menos 25.
 	\item El atributo edad de cada legislador que sea senador es de al menos 30.
 	\item En la c\'amara de senadores hay exactamente 3 representantes por provincia.
-	\item La fecha de inicio de en el cargo es menor a la fecha de fin de cargo.
+	\item La fecha de inicio en el cargo es menor a la fecha de fin de cargo.
 	\item No puede haber un legislador que sea senador y diputado en periodos de
 	 inicio de periodo y fin periodo solapados.
 	
 	\item En todas las relaciones que tengan fechas como atributos las fechas de inicio
 	 deben ser anteriores a las de fin.
 	
-	\item La cantidad de comisiones que la c\'amara de diputados es 45.
+	\item La cantidad de comisiones de la c\'amara de diputados es 45.
 	
 	\item Las fechas de inicio y fin de una sesi\'on peraratoria u ordinaria tienen que ser entre el 1 de marzo al 30 de noviembre de un mismo a\~no.
 	
@@ -17,12 +17,10 @@
 	
 	\item La cantidad de votos de un proyecto en una votaci\'on es igual a la cantidad de tuplas existentes en la relaci\'on Votan para ese proyecto. La cantidad de votos por c\'amara depender\'a del tipo de legislador.
 	
-	\item La fecha de sancionada de una Ley tiene que ser la fecha de la sesi\'on \'ultima sesi\'on donde se la vot\'o. Por lo que, tiene que haber exactamente dos sesiones, una por cada c\'amara, donde se vota al proyecto sancionado.
+	\item La fecha de sancionada de una Ley tiene que ser la fecha de la \'ultima sesi\'on donde se la vot\'o. Por lo que, tiene que haber exactamente dos sesiones, una por cada c\'amara, donde se vota al proyecto sancionado.
 	
 	\item A lo sumo hay dos sesiones donde se vota un proyecto de ley.
 	
-	\item Todos los legisladores que componen la c\'amara de diputados, son diputados y todos los que componen la c\'amara de senadores son senadores.
-
 	\item La cantidad de legisladores que asiste a cada sesi\'on es menor o igual a la cantidad de legisladores que componen la c\'amara de diputados o la cantidad de legisladores que componen la c\'amara senadores dependiendo que c\'amara haga la sesi\'on.
 	
 	\item Si un legislador tiene m\'as de 15 ausencias hasta una determinada fecha f en un a\~no, entonces no puede haber una tupla en la relaci\'on \textit{Votan} que figure ese legislador y con una fecha posterior a f. Siempre y cuando sea en el a\~no donde acumula 15 ausencias. Se \textit{resetean} al comenzar el per\'iodo legislativo.
