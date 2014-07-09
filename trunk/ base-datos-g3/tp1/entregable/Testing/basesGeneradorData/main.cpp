@@ -547,6 +547,8 @@ void insertarVotos(){
     }
 
     //Se ha votado Proyectos 1 y 2 y medio del 3
+    query = string("update Proyecto_de_ley set estado_votaciones = 'M' where titulo_proyecto_ley = 'Proyecto1';");
+    cout << query << endl;
     query = string("update Proyecto_de_ley set estado_votaciones = 'C' where titulo_proyecto_ley = 'Proyecto1';");
     cout << query << endl;
     query = string("update Proyecto_de_ley set estado_votaciones = 'C' where titulo_proyecto_ley = 'Proyecto2';");
