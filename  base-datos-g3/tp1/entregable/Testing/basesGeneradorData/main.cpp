@@ -57,11 +57,11 @@ unsigned int habitantes[CANT_PROV];
 
 int main(){
     srand(time(NULL));
-    insertarComisiones(CANT_COMISIONES);
     insertarProvincias(CANT_PROV);
     insertarPartidoPolitico(CANT_PARTIDOS);
     insertarBloquePolitico(CANT_PARTIDOS);
     insertarLegislador();
+    insertarComisiones(CANT_COMISIONES);
     insertarVice();
     insertarCamaras();
     insertarBienes();
@@ -80,8 +80,16 @@ int main(){
 void insertarComisiones(unsigned int cant){
     string query;
     for(unsigned int i = 0; i < cant; i++){
-        query = string("insert into Comision (nombre_comision) values ('Comision") + intToStr(i+1) +  string("');");
-        cout << query << endl;
+        unsigned int posAzar = rand()%conjDipu.size();
+        unsigned int j = 0;
+        for(set<pair<string, string> >::iterator it = conjDipu.begin(); it != conjDipu.end(); it++){
+            if(j==posAzar){
+                query = string("insert into Comision (nombre_comision,dni_informante) values ('Comision") + intToStr(i+1) +  string("','" + getDNI((*it).first) + "');");
+                cout << query << endl;
+                break;
+            }
+            j++;
+        }
     }
 }
 
@@ -139,7 +147,7 @@ void insertarLegislador(){
         }while((conjDNI.end() != conjDNI.find(getDNI(d))) || d.length() == 0);
         conjDNI.insert(getDNI(d));
         conjSen.insert(d);
-        query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("', ") + intToStr(bloqueSenadoresAzar(i,CANT_PARTIDOS)) + string(",'Provincia") + intToStr(provi) + "','S');";
+        query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,nombre_provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("', ") + intToStr(bloqueSenadoresAzar(i,CANT_PARTIDOS)) + string(",'Provincia") + intToStr(provi) + "','S');";
         cout << query << endl;
         if((i)%3 == 0) provi = provi + 1;
     }
@@ -157,7 +165,7 @@ void insertarLegislador(){
             if(bloque == "-1"){
                 bloque = "1";
             }
-            query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("',") + bloque + string(",'Provincia") + intToStr(i+1) + "','D');";
+            query = string("insert into Legislador (dni, nombre, fecha_nacimiento,id_bloque_politico,nombre_provincia,tipo) values ('") + getDNI(d) + string("', '") + getNombre(d)+ string("', '") +  fechaAzar(1950,1982) + string("',") + bloque + string(",'Provincia") + intToStr(i+1) + "','D');";
             cout << query << endl;
             habitantes[i] = habitantes[i] - 33000;
         }
@@ -270,7 +278,7 @@ void insertarBienes(){
         //Bienes inmobiliarios
         for(unsigned int i = 0; i <= rand()%10; i++){
             insertarBieneEconomico(100000+rand()%3000000,"I");
-            query = string("insert into Bienes_del_legislador (dni_legislador,id_bien_economico,fecha_obtencion,fecha_sucesion) values ");
+            query = string("insert into Es_propietario_de (dni_legislador,id_bien_economico,fecha_obtencion,fecha_sucesion) values ");
             query = query + string("('") + dniLegislador + string("',") + intToStr(idBien) + string(",'") + fechaAzar(1985,2014) + string("',NULL);");
             cout << query << endl;
             idBien++;
@@ -279,7 +287,7 @@ void insertarBienes(){
         //Bienes de sociedad
         for(unsigned int i = 0; i < rand()%5; i++){
             insertarBieneEconomico(100000+rand()%5000000,"S");
-            query = string("insert into Bienes_del_legislador (dni_legislador,id_bien_economico,fecha_obtencion,fecha_sucesion) values ");
+            query = string("insert into Es_propietario_de (dni_legislador,id_bien_economico,fecha_obtencion,fecha_sucesion) values ");
             query = query + string("('") + dniLegislador + string("',") + intToStr(idBien) + string(",'") + fechaAzar(1985,2014) + string("',NULL);");
             cout << query << endl;
             idBien++;
@@ -288,7 +296,7 @@ void insertarBienes(){
         //Bienes acciones
         for(unsigned int i = 0; i < rand()%5; i++){
             insertarBieneEconomico(100+rand()%5000,"A");
-            query = string("insert into Bienes_del_legislador (dni_legislador,id_bien_economico,fecha_obtencion,fecha_sucesion) values ");
+            query = string("insert into Es_propietario_de (dni_legislador,id_bien_economico,fecha_obtencion,fecha_sucesion) values ");
             query = query + string("('") + dniLegislador + string("',") + intToStr(idBien) + string(",'") + fechaAzar(1985,2014) + string("',NULL);");
             cout << query << endl;
             idBien++;
@@ -305,7 +313,7 @@ void insertarPeriodo(){
 
     //Por cada legislador
     for(set<string>::iterator it = conjDNI.begin(); it != conjDNI.end(); it++){
-        query = string("insert into Periodos_del_legislador (dni_legislador,fecha_inicio,fecha_fin) values ('") + (*it) + string("','2008-01-01','2012-12-31');");
+        query = string("insert into Legisla_durante (dni_legislador,fecha_inicio,fecha_fin) values ('") + (*it) + string("','2008-01-01','2012-12-31');");
         cout << query << endl;
     }
 }
@@ -317,17 +325,17 @@ void insertarPartEnComisiones(){
     unsigned cantPresidencias = 0;
     for(set<pair<string, string> >::iterator it = conjDipu.begin(); it != conjDipu.end(); it++){
         string dniDipu = getDNI((*it).first);
-        query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,nombre_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31','Comision") + intToStr(comision+1) + string("');");
+        query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,id_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31',") + intToStr(comision+1) + string(");");
         cout << query << endl;
         if(cantPresidencias < CANT_COMISIONES){
-            query = string("insert into Preside_comision (nombre_comision,dni_diputado,fecha_inicio_preside,fecha_fin_preside) values ('Comision") + intToStr(comision+1) + string("','") + dniDipu + string("','2008-01-01','2012-12-31');");
+            query = string("insert into Preside_comision (id_comision,dni_diputado,fecha_inicio_preside,fecha_fin_preside) values (") + intToStr(comision+1) + string(",'") + dniDipu + string("','2008-01-01','2012-12-31');");
             cout << query << endl;
             cantPresidencias++;
         }
         for(unsigned int c = 1; c <= CANT_COMISIONES; c++){
             if(c == comision+1) continue;
             if(rand()%100 > 97){
-                query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,nombre_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31','Comision") + intToStr(c) + string("');");
+                query = string("insert into Participa_en_comision (dni_legislador,fecha_inicio_participacion,fecha_fin_participacion,id_comision) values ('") + dniDipu + string("','2008-01-01','2012-12-31',") + intToStr(c) + string(");");
                 cout << query << endl;
             }
         }
@@ -346,10 +354,10 @@ void insertarProyectos(){
     string origen;
     for(unsigned int i = 1; i <= CANT_PROYECTOS; i++){
         if(rand()%100 > 50)
-            origen = "D";
+            origen = "0";
         else
-            origen = "S";
-        query = string("insert into Proyecto_de_ley (titulo_proyecto_ley,fecha,id_camara,estado_votaciones) values ('Proyecto") + intToStr(i) + string("','") + fechaAzar(2008,2009) + string("','") + origen + string("','A');");
+            origen = "1";
+        query = string("insert into Proyecto_de_ley (titulo_proyecto_ley,fecha,id_camara_originaria,estado_votaciones) values ('Proyecto") + intToStr(i) + string("','") + fechaAzar(2008,2009) + string("','") + origen + string("','A');");
         cout << query << endl;
     }
 }
@@ -365,7 +373,7 @@ void insertarEstudia(){
     for(unsigned int i = 1; i <= CANT_PROYECTOS; i++){
         for(unsigned int c = 1; c <= CANT_COMISIONES; c++){
             if(rand()%100 > 95){
-                query = string("insert into Estudia (nombre_comision,titulo_proyecto_ley) values ('Comision") + intToStr(c) + string("','Proyecto") + intToStr(i) + string("');");
+                query = string("insert into Estudia (id_comision,titulo_proyecto_ley) values (") + intToStr(c) + string(",'Proyecto") + intToStr(i) + string("');");
                 cout << query << endl;
             }
         }
