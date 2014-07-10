@@ -106,27 +106,28 @@ class ClassicHistogram(Estimator):
 
 
 	def estimate_equal(self,value):
-		if self.min < 0 :
-			indice = (abs(self.min) + value) / self.anchoBucket
-		else:
-			indice = value / self.anchoBucket
-		indice = int(indice)
+		indice = self.calcularIndice(value)
 		if(len(self.buckets) <= indice):
 			indice = len(self.buckets) - 1
 		return (1.0*self.buckets[indice] / self.total)
 
 	def estimate_greater(self,value):
-		if self.min < 0 :
-			indice = (abs(self.min) + value) / self.anchoBucket
-		else:
-			indice = value / self.anchoBucket
-		indice = int(indice)
+		indice = self.calcularIndice(value)
 		if(len(self.buckets) <= indice):
 			return 0
 		acumulador = 0
 		for i in range(indice+1,len(self.buckets)):
 			acumulador = acumulador + self.buckets[i]
 		return (1.0 * acumulador / self.total)
+		
+	def calcularIndice(self, value):
+		indice = 0
+		if self.min < 0 :
+			indice = (abs(self.min) + value) / self.anchoBucket
+		else:
+			indice = value / self.anchoBucket
+		indice = int(indice)
+		return indice
 	
 
 #######################################
@@ -135,8 +136,10 @@ class ClassicHistogram(Estimator):
 class EstimatorGrupo(ClassicHistogram):
 	
 	def build_struct(self):
+		self.cantBuckets = super.parameter
+		super.parameter = self.cantBuckets / 2
+		print "parametro: ",self.cantBuckets," - clasico: ", super.parameter
 		super.build_struct()
-		self.reacomodarValores()
 		###"""Ahora reacomodamos los valores muy altos para mejorar la selectividad"""
 
 	
