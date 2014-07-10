@@ -3,7 +3,6 @@ import sqlite3
 import numpy as np
 # import pylab
 import random
-import intervalos
 import math
 
 class Estimator(object):
@@ -79,9 +78,9 @@ class ClassicHistogram(Estimator):
 		c.execute("Select count(" + self.column + ") From " + self.table + ";")
 		self.total = c.fetchone()[0]
 
-		rango = self.max - self.min
+		self.rango = self.max - self.min
 
-		self.anchoBucket = rango / self.parameter
+		self.anchoBucket = self.rango / self.parameter
 		#~ print "min:",self.min," max:",self.max," total:",self.total," rango:",rango," ancho:",self.anchoBucket
 		c.execute("Select " + self.column + " From " + self.table + ";")
 		while True:
@@ -89,11 +88,7 @@ class ClassicHistogram(Estimator):
 			if(fila == None):
 				break
 			else:
-				if self.min < 0 :
-					indice = (abs(self.min) + fila[0]) / self.anchoBucket
-				else:
-					indice = fila[0] / self.anchoBucket
-				indice = int(indice)
+				indice = self.calcularIndice(fila[0])
 				if(len(self.buckets) <= indice):
 					indice = len(self.buckets) - 1
 				#~ print "b: ",self.parameter," - i: ",indice, " - valor: ", fila[0], " - min: ", self.min
@@ -123,7 +118,7 @@ class ClassicHistogram(Estimator):
 	def calcularIndice(self, value):
 		indice = 0
 		if self.min < 0 :
-			indice = (abs(self.min) + value) / self.anchoBucket
+			indice = (abs(self.min) + abs(value)) / self.anchoBucket
 		else:
 			indice = value / self.anchoBucket
 		indice = int(indice)
@@ -133,16 +128,52 @@ class ClassicHistogram(Estimator):
 #######################################
 	
 	
-class EstimatorGrupo(ClassicHistogram):
+class EstimatorGrupo(Estimator):
 	
 	def build_struct(self):
-		self.cantBuckets = super.parameter
-		super.parameter = self.cantBuckets / 2
-		print "parametro: ",self.cantBuckets," - clasico: ", super.parameter
-		super.build_struct()
-		###"""Ahora reacomodamos los valores muy altos para mejorar la selectividad"""
+		self.clasico = ClassicHistogram(self.db, self.table, self.column, self.parameter//2)
+		self.cantBuckets = self.parameter//2
+		print self.clasico.buckets
+		conexion = sqlite3.connect(self.db)
+		c = conexion.cursor()
+		while self.cantBuckets < self.parameter:
+			max = 0
+			posMax = 0
+			pos = 0
+			for b in self.clasico.buckets:
+				if(max < b):
+					max = b
+					posMax = pos
+				pos = pos + 1
+			
+			###Calculo un estimativo de cual podria ser el minimo valor del bucket. Esto introduce un error pudiendo haber mayor cantidad
+			###de elementos que en el original (casi seguro)
+			minBucket = self.clasico.anchoBucket * posMax
+			c.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + " > " + \
+			str(minBucket)  + " and " + self.column + " < " + str(minBucket + (self.clasico.anchoBucket//2)) + ";")
+			
+			valor1 = c.fetchone()[0]
+			valor2 = max - valor1
+			if(valor2 <= 0 ):
+				###Si los errores introducidos hacen que sea algo imposible se termina manteniendo algo usable
+				break
+			self.clasico.buckets.insert(posMax+1,valor1)
+			self.clasico.buckets.insert(posMax+2,valor2)
+			del self.clasico.buckets[posMax]
+			#~ print self.clasico.buckets
+			self.cantBuckets = self.cantBuckets + 1
+			
+			###Actualizo el ancho del bucket. Se introduce mas error, se asume que todos los buckets tienen mismo ancho.
+			self.clasico.anchoBucket = (self.clasico.rango//self.cantBuckets) 
+			
+		conexion.close()
+		print self.clasico.buckets
 
-	
+	def estimate_equal(self,value):
+		return self.clasico.estimate_equal(value)
+
+	def estimate_greater(self,value):
+		return self.clasico.estimate_greater(value)
 	
 ##################################
 	

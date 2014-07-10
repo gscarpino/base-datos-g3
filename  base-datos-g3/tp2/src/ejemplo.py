@@ -8,7 +8,7 @@ aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, param
 # 'Pasos Distribuidos'
 bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, parameter=20)
 # 'Implementacion Propia'
-cEstimator = estimators.Entropia('db.sqlite3', 'table1', atributo, parameter=20)
+cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, parameter=20)
 # Pruebo distintas instancias de estimacion
 
 print "Classic Histogram"
