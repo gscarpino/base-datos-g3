@@ -8,7 +8,7 @@ CREATE TRIGGER convertir_proyecto_en_ley AFTER UPDATE ON Proyecto_de_ley
 		DECLARE votos_positivos INT;
 		DECLARE votos_negativos INT;
 		DECLARE fechaSancionada DATE;
-		IF OLD.estado_votaciones in ('M') and NEW.estado_votaciones = 'C'
+		IF OLD.estado_votaciones in ('M') and NEW.estado_votaciones = 'F'
 		THEN
 			SET votos_positivos = ( SELECT count(1) 
 									  FROM Votan v
