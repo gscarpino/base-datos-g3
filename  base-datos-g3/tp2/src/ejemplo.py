@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import estimators
-atributo = 'c3'
+#~ atributo = 'c3'
+atributo = 'c1'
 # Creo una instancia de la clase que representa al metodo
 exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
 # 'Histograma Clasico'
@@ -11,21 +12,26 @@ bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, param
 cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, parameter=20)
 # Pruebo distintas instancias de estimacion
 
+valorEqual=50
+valorGreater=70
+#~ valorEqual=332
+#~ valorGreater=1797
+
 print "Classic Histogram"
-print "  Sel(=%d) : %3.5f" % (50, aEstimator.estimate_equal(50))
-print "  Sel(>%d) : %3.5f" % (70, aEstimator.estimate_greater(70))
+print "  Sel(=%d) : %3.5f" % (valorEqual, aEstimator.estimate_equal(valorEqual))
+print "  Sel(>%d) : %3.5f" % (valorGreater, aEstimator.estimate_greater(valorGreater))
 
 print "Pasos Distribuidos"
-print "  Sel(=%d) : %3.5f" % (50, bEstimator.estimate_equal(50))
-print "  Sel(>%d) : %3.5f" % (70, bEstimator.estimate_greater(70))
+print "  Sel(=%d) : %3.5f" % (valorEqual, bEstimator.estimate_equal(valorEqual))
+print "  Sel(>%d) : %3.5f" % (valorGreater, bEstimator.estimate_greater(valorGreater))
 
 print "Implementacion Propia"
-print "  Sel(=%d) : %3.5f" % (50, cEstimator.estimate_equal(50))
-print "  Sel(>%d) : %3.5f" % (70, cEstimator.estimate_greater(70))
+print "  Sel(=%d) : %3.5f" % (valorEqual, cEstimator.estimate_equal(valorEqual))
+print "  Sel(>%d) : %3.5f" % (valorGreater, cEstimator.estimate_greater(valorGreater))
 
 print "Exacto"
-print "  Sel(=%d) : %3.5f" % (50, exacto.estimate_equal(50))
-print "  Sel(>%d) : %3.5f" % (70, exacto.estimate_greater(70))
+print "  Sel(=%d) : %3.5f" % (valorEqual, exacto.estimate_equal(valorEqual))
+print "  Sel(>%d) : %3.5f" % (valorGreater, exacto.estimate_greater(valorGreater))
 
 
 # salto = 25

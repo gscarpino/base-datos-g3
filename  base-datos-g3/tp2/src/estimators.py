@@ -104,7 +104,7 @@ class ClassicHistogram(Estimator):
 		indice = self.calcularIndice(value)
 		if(len(self.buckets) <= indice):
 			indice = len(self.buckets) - 1
-		return (1.0*self.buckets[indice] / self.total)
+		return (1.0 * self.buckets[indice] / self.total)
 
 	def estimate_greater(self,value):
 		indice = self.calcularIndice(value)
@@ -131,9 +131,15 @@ class ClassicHistogram(Estimator):
 class EstimatorGrupo(Estimator):
 	
 	def build_struct(self):
-		self.clasico = ClassicHistogram(self.db, self.table, self.column, self.parameter//2)
+		#~ self.cantBuckets = self.parameter//2 + self.parameter//4
 		self.cantBuckets = self.parameter//2
-		print self.clasico.buckets
+		self.clasico = ClassicHistogram(self.db, self.table, self.column, self.cantBuckets)
+		acum = self.clasico.min
+		self.rangos = []
+		for i in range(0,self.cantBuckets):
+			self.rangos.append([acum, (acum + self.clasico.anchoBucket)])
+			acum = acum + self.clasico.anchoBucket
+		print self.rangos
 		conexion = sqlite3.connect(self.db)
 		c = conexion.cursor()
 		while self.cantBuckets < self.parameter:
@@ -145,35 +151,47 @@ class EstimatorGrupo(Estimator):
 					max = b
 					posMax = pos
 				pos = pos + 1
-			
-			###Calculo un estimativo de cual podria ser el minimo valor del bucket. Esto introduce un error pudiendo haber mayor cantidad
-			###de elementos que en el original (casi seguro)
-			minBucket = self.clasico.anchoBucket * posMax
+			minDelBucket = self.rangos[posMax][0]
 			c.execute("Select count(" + self.column + ") From " + self.table + " Where " + self.column + " > " + \
-			str(minBucket)  + " and " + self.column + " < " + str(minBucket + (self.clasico.anchoBucket//2)) + ";")
-			
+			str(minDelBucket)  + " and " + self.column + " < " + str(minDelBucket + ((self.rangos[posMax][1]-minDelBucket)//2)) + ";")
 			valor1 = c.fetchone()[0]
 			valor2 = max - valor1
-			if(valor2 <= 0 ):
-				###Si los errores introducidos hacen que sea algo imposible se termina manteniendo algo usable
-				break
 			self.clasico.buckets.insert(posMax+1,valor1)
 			self.clasico.buckets.insert(posMax+2,valor2)
 			del self.clasico.buckets[posMax]
 			#~ print self.clasico.buckets
 			self.cantBuckets = self.cantBuckets + 1
-			
-			###Actualizo el ancho del bucket. Se introduce mas error, se asume que todos los buckets tienen mismo ancho.
-			self.clasico.anchoBucket = (self.clasico.rango//self.cantBuckets) 
-			
+			self.rangos.insert(posMax+1,[minDelBucket,minDelBucket+(self.rangos[posMax][1]-minDelBucket)//2])
+			self.rangos.insert(posMax+2,[minDelBucket+((self.rangos[posMax][1]-minDelBucket)//2),self.rangos[posMax][1]])
+			del self.rangos[posMax]
+			#~ print self.anchos
 		conexion.close()
-		print self.clasico.buckets
+		#~ print self.clasico.buckets
+		#~ print self.anchos
+		
 
 	def estimate_equal(self,value):
-		return self.clasico.estimate_equal(value)
+		indice = self.calcularIndice(value)
+		if(self.cantBuckets <= indice):
+			indice = self.cantBuckets - 1
+		return (1.0 * self.clasico.buckets[indice] / self.clasico.total)
 
 	def estimate_greater(self,value):
-		return self.clasico.estimate_greater(value)
+		indice = self.calcularIndice(value)
+		if(self.cantBuckets <= indice):
+			return 0
+		acumulador = 0
+		for i in range(indice+1,self.cantBuckets):
+			acumulador = acumulador + self.clasico.buckets[i]
+		return (1.0 * acumulador / self.clasico.total)
+		
+	def calcularIndice(self, value):
+		indice = 0
+		for b in self.rangos:
+			if value <= b[1]:
+				break
+			indice = indice + 1
+		return indice
 	
 ##################################
 	
