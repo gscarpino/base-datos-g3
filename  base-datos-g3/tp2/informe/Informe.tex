@@ -21,10 +21,7 @@
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{float}
-
-
-
-
+\usepackage{ulem}
 
 \newcommand{\f}[1]{\text{#1}}
 \newcommand{\call}[1] {\textsc{#1}}
@@ -49,8 +46,8 @@
 \hypersetup{%
  % Para que el PDF se abra a pagina completa.
  pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
- pdfauthor={Bases de Datos - DC - UBA},
- pdfkeywords={Trabajo Práctico 2},
+ pdfauthor={C\'atedra de Algoritmos y Estructuras de Datos III - DC - UBA},
+ pdfkeywords={Trabajo Pr\'actico 3},
  pdfsubject={}
 }
 
@@ -65,7 +62,7 @@
 \thispagestyle{fancy}
 \addtolength{\headheight}{1pt}
 \lhead{Base de Datos}
-\rhead{TP2 - Grupo 3}
+\rhead{TP2}
 \cfoot{\thepage /\pageref{LastPage}}
 \renewcommand{\footrulewidth}{0.4pt}
 
@@ -77,11 +74,10 @@
 
 %Pagina de titulo e indice
 \thispagestyle{empty}
-\materia{Base de Datos}
+\materia{Base de datos}
 \submateria{TP2}
 \titulo{}
-\grupo{Grupo 3}
-\integrante{Martín Celave}{aaa/08}{a@gmail.com}
+\grupo{NN\_3}
 \integrante{Sergio Gonz\'alez}{723/10}{sergiogonza90@gmail.com}
 \integrante{Gino Scarpino}{392/08}{gino.scarpino@gmail.com}
 \maketitle
@@ -97,5 +93,6 @@
 
 \section{Introducci\'on}
 
+	\input{tex/introduccion.tex}
 
 \end{document}
