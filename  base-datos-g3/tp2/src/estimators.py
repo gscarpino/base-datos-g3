@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 import numpy as np
-import pylab
+# import pylab
 import random
 import intervalos
 import math
@@ -121,7 +121,16 @@ class ClassicHistogram(Estimator):
 			acumulador = acumulador + self.buckets[i]
 		return (1.0 * acumulador / self.total)
 
-
+class ModifiedClassicHistogram(ClassicHistogram):
+	
+	def build_struct(self):
+		super.build_struct()
+		self.reacomodarValores()
+		
+	def reacomodarValores(self):
+		"""Aca reacomodar los valores muy altos para mejorar la selectividad"""
+	
+		
 class DistributedSteps(Estimator):
 	"""Pasos distribuidos"""
 
