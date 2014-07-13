@@ -77,6 +77,9 @@ class ClassicHistogram(Estimator):
         self.rango = self.max - self.min
 
         self.anchoBucket = self.rango / self.parameter
+        if (self.anchoBucket == 0):
+            self.parameter = self.rango
+            self.anchoBucket = 1
         # print "min:",self.min," max:",self.max," total:",self.total," rango:",self.rango," ancho:",self.anchoBucket
         c.execute("Select " + self.column + " From " + self.table + ";")
         fila = c.fetchone()

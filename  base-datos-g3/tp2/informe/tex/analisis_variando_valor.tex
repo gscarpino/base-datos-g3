@@ -1,3 +1,6 @@
+	
+	\subsubsection{Distribuci\'on normal}		
+		
 		\subsubsection*{Caso 1}
 		
 		\begin{tabular}{| l | l |}
@@ -51,6 +54,43 @@
 		\hline
 		Parametro & 20 \\
 		\hline
+		Columna & C2 \\
+		\hline
+		Valor maximo & 1002 \\
+		\hline
+		Valor minimo & -671 \\
+		\hline
+		Distribuci\'on & Normal, Media=200 \\
+		\hline
+		Selectividad de & Mayor \\
+		\hline
+		\end{tabular}
+
+		\newpage					
+
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.40]{imagenes/C2_variando_valor_greater.png}
+	    \caption{Errores variando valor a estimar por mayor con parametro fijo} 
+	    \label{fig:C2_variando_valor_greater}
+	  \end{center}
+	\end{figure}
+		
+		Usando el mismo set de datos uniforme que se uso anteriormente, vemos en la figura \ref{fig:C0_variando_valor_greater} el error de la selectividad pero estimando por mayor. En este caso sucede algo muy parecido a lo que sucede al estimar por menor, con la salvedad de que el de pasos distribuidos no resulta tan constante durante todo el rango.
+		
+		El error del histograma clasico de nuevo es cada ves mayor a medida que se acerca a la media de la normal. 
+		
+		El estimador del grupo en esta ocacion resulto ser casi tan bueno como el de pasos distribuidos. Al parecer tiene una buena performance en los datos con distribuci\'on normal.
+
+	\subsubsection{Distribuci\'on uniforme}	
+
+\subsubsection*{Caso 3}
+		
+		\begin{tabular}{| l | l |}
+		\hline
+		Parametro & 20 \\
+		\hline
 		Columna & C0 \\
 		\hline
 		Valor minimo & 0 \\
@@ -90,42 +130,8 @@
 		
 		Seg\'un pareciera, en los valores donde la distribuci\'on uniforme toma valores altos, los errores de pasos distribuidos aumentan bastante, igualando a los obtenidos en los otros 2 estimadores.
 
-		\subsubsection*{Caso 3}
-		
-		\begin{tabular}{| l | l |}
-		\hline
-		Parametro & 20 \\
-		\hline
-		Columna & C2 \\
-		\hline
-		Valor maximo & 1002 \\
-		\hline
-		Valor minimo & -671 \\
-		\hline
-		Distribuci\'on & Normal, Media=200 \\
-		\hline
-		Selectividad de & Mayor \\
-		\hline
-		\end{tabular}
 
-		\newpage					
-
-	\begin{figure}[H]
-	  \begin{center}
-	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
-	    \includegraphics[scale=.40]{imagenes/C2_variando_valor_greater.png}
-	    \caption{Errores variando valor a estimar por mayor con parametro fijo} 
-	    \label{fig:C2_variando_valor_greater}
-	  \end{center}
-	\end{figure}
-		
-		Usando el mismo set de datos uniforme que se uso anteriormente, vemos en la figura \ref{fig:C0_variando_valor_greater} el error de la selectividad pero estimando por mayor. En este caso sucede algo muy parecido a lo que sucede al estimar por menor, con la salvedad de que el de pasos distribuidos no resulta tan constante durante todo el rango.
-		
-		El error del histograma clasico de nuevo es cada ves mayor a medida que se acerca a la media de la normal. 
-		
-		El estimador del grupo en esta ocacion resulto ser casi tan bueno como el de pasos distribuidos. Al parecer tiene una buena performance en los datos con distribuci\'on normal.
-
-			\subsubsection*{Caso 4}
+		\subsubsection*{Caso 4}
 		
 		\begin{tabular}{| l | l |}
 		\hline

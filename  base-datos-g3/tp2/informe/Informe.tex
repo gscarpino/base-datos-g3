@@ -119,64 +119,16 @@
 
 	\subsection{An\'alisis de los estimadores: Par\'ametro fijo}
 			
-%		\textbf{Pregunta}: Dados los m\'etodos ``Classic Histograms'' y ``Distribution Steps''. Cu\'al esperar\'ia que
-%tenga mejor performance en la estimaci\'on para un par\'ametro f\'ijo (en caso del primer
-%m\'etodo, el par\'ametro es la cantidad de bins y, en el segundo, la cantidad de steps?
-%Justif\'icar.			
-
-		Primero realizaremos un an\'alisis sobre, un mismo set de datos, y un par\'ametro igual para todos los estimadores, y veremos como se comportan. De esta forma podremos analizar para las distintas distribuciones de datos, como se comporta cada m\'etodo y cuales son las ventajas y desventajas de cada uno.
-
-		Intuitivamente podr\'iamos decir que, al ser ``Distribution Steps'' un histograma que no tiene el mismo ancho, sino que tiene misma altura en todos los \textit{bins}, claramente es esperable que para un par\'ametro fijo, y un set de datos fijo, ``Distribution Steps'' tenga error menor.
-		
-		Para comprobar esto, utilizaremos el set de datos provisto para la materia y realizaremos gr\'aficos comparando los 3 estimadores implementados. 
-		
-		\subsubsection*{Caso 1}
-		
-		\begin{tabular}{| l | l |}
-		\hline
-		Parametro & 10 \\
-		\hline
-		Columna & C2 \\
-		\hline
-		Valor maximo & 1002 \\
-		\hline
-		Valor minimo & -671 \\
-		\hline
-		Distribuci\'on & Normal, Media=200 \\
-		\hline
-		\end{tabular}
-
-	\begin{figure}[H]
-	  \begin{center}
-	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
-	    \includegraphics[scale=.50]{imagenes/distro_C2.png}
-	    \caption{Grafico de distribucion de la columna C2 del set de datos de la caterda} 
-	    \label{fig:(distro_C2}
-	  \end{center}
-	\end{figure}
-
-		\newpage					
-	\begin{figure}[H]
-	  \begin{center}
-	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
-	    \includegraphics[scale=.40]{imagenes/C2_variando_valor.png}
-	    \caption{Errores variando valor a estimar con parametro fijo} 
-	    \label{fig:C2_variando_valor}
-	  \end{center}
-	\end{figure}
-		
-		En la figura \ref{fig:(distro_C2} se ve la distribucion del set de datos que estamos analizando. Se puede ver como es una distribucion Normal con media 200 y un desv\'io alrededor de 300
-		
-		En la grafico de la figura \ref{fig:C2_variando_valor} se ve como, teniendo los parametros de los estimadores fijos, y variando el valor a estimar, el estimador de Distribution Steps obtiene un error constante y bastante chico en todo el rango, pero Classic Histogram se comporta mejor en los casos que estan por afuera del desvio standard de la normal (en este caso, al rededor de 300).
-		
-		Tambi\'en se puede ver como el estimador Classic Histogram obtiene errores muy grandes cuando el valor es muy cercanos a la media. En la media misma se ve como el error llega al m\'aximo.
-		
-		En cuanto al estimador ideado por el grupo, se ve como al igual que el Histograma, obtiene errores muy chicos en valores lejos del desvio standard de la normal, y a su ves, errores altos en los valores al rededor de la media. Sin embargo, estos errores son inferiores a los obtenidos en el histograma. Esto probablemente se deba a que el estimador de Grupo, es un histograma clasico pero con una re-distribuci\'on en los \textit{bins} con mas valores, los cuales en este caso estarán cerca de la media.
+		\input{tex/analisis_variando_valor.tex}
 	
 \newpage
 		
-\subsection{An\'alisis de los estimadores: Par\'ametro variable}
+	\subsection{An\'alisis de los estimadores: Par\'ametro variable}
 
-	\input{tex/analisisParametroVariable.tex}
+		\input{tex/analisisParametroVariable.tex}
+		
+	\subsection{An\'alisis para distintas columnas con parametro variable}
+	
+		\input{tex/analisis_variando_columnas.tex}
 		
 \end{document}
