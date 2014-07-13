@@ -1,0 +1,157 @@
+		\subsubsection*{Caso 1}
+		
+		\begin{tabular}{| l | l |}
+		\hline
+		Parametro & 20 \\
+		\hline
+		Columna & C2 \\
+		\hline
+		Valor maximo & 1002 \\
+		\hline
+		Valor minimo & -671 \\
+		\hline
+		Distribuci\'on & Normal, Media=200 \\
+		\hline
+		Selectividad de & Igualdad \\
+		\hline
+		\end{tabular}
+
+		\newpage					
+
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.40]{imagenes/distro_C2.png}
+	    \caption{Grafico de distribucion de la columna C2 del set de datos de la caterda} 
+	    \label{fig:(distro_C2}
+	  \end{center}
+	\end{figure}
+
+
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.40]{imagenes/C2_variando_valor.png}
+	    \caption{Errores variando valor a estimar con parametro fijo} 
+	    \label{fig:C2_variando_valor}
+	  \end{center}
+	\end{figure}
+		
+		En la figura \ref{fig:(distro_C2} se ve la distribucion del set de datos que estamos analizando. Se puede ver como es una distribucion Normal con media 200 y un desv\'io alrededor de 300
+		
+		En la grafico de la figura \ref{fig:C2_variando_valor} se ve como, teniendo los parametros de los estimadores fijos, y variando el valor a estimar, el estimador de Distribution Steps obtiene un error constante y bastante chico en todo el rango, pero Classic Histogram se comporta mejor en los casos que estan por afuera del desvio standard de la normal (en este caso, al rededor de 300).
+		
+		Tambi\'en se puede ver como el estimador Classic Histogram obtiene errores muy grandes cuando el valor es muy cercanos a la media. En la media misma se ve como el error llega al m\'aximo.
+		
+		En cuanto al estimador ideado por el grupo, se ve como al igual que el Histograma, obtiene errores muy chicos en valores lejos del desvio standard de la normal, y a su ves, errores altos en los valores al rededor de la media. Sin embargo, estos errores son inferiores a los obtenidos en el histograma. Esto probablemente se deba a que el estimador de Grupo, es un histograma clasico pero con una re-distribuci\'on en los \textit{bins} con mas valores, los cuales en este caso estarán cerca de la media.
+	
+		\subsubsection*{Caso 2}
+		
+		\begin{tabular}{| l | l |}
+		\hline
+		Parametro & 20 \\
+		\hline
+		Columna & C0 \\
+		\hline
+		Valor minimo & 0 \\
+		\hline
+		Valor maximo & 999 \\
+		\hline
+		Distribuci\'on & Uniforme, Media = 4950 \\
+		\hline
+		Selectividad de & Igualdad \\
+		\hline
+		\end{tabular}		
+
+		\newpage							
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.50]{imagenes/distro_C0.png}
+	    \caption{Grafico de distribucion de la columna C0 del set de datos de la caterda} 
+	    \label{fig:(distro_C0}
+	  \end{center}
+	\end{figure}
+
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.40]{imagenes/C0_variando_valor.png}
+	    \caption{Errores variando valor a estimar con parametro fijo} 
+	    \label{fig:C0_variando_valor}
+	  \end{center}
+	\end{figure}	
+
+		En la figura \ref{fig:(distro_C0} se ve como la distribucion de los datos esta ves es una Uniforme que varia al rededor de 4950
+		
+		Segun se ve en la \ref{fig:C0_variando_valor}, no hay una gran diferencia esta ves con el Histograma clasico y el estimador implementado por el grupo. 
+		
+		En este caso, se puede apreciar como claramente ``Pasos Distribuidos'' obtiene errores bastante menores en casi todo el rango.
+		
+		Seg\'un pareciera, en los valores donde la distribuci\'on uniforme toma valores altos, los errores de pasos distribuidos aumentan bastante, igualando a los obtenidos en los otros 2 estimadores.
+
+		\subsubsection*{Caso 3}
+		
+		\begin{tabular}{| l | l |}
+		\hline
+		Parametro & 20 \\
+		\hline
+		Columna & C2 \\
+		\hline
+		Valor maximo & 1002 \\
+		\hline
+		Valor minimo & -671 \\
+		\hline
+		Distribuci\'on & Normal, Media=200 \\
+		\hline
+		Selectividad de & Mayor \\
+		\hline
+		\end{tabular}
+
+		\newpage					
+
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.40]{imagenes/C2_variando_valor_greater.png}
+	    \caption{Errores variando valor a estimar por mayor con parametro fijo} 
+	    \label{fig:C2_variando_valor_greater}
+	  \end{center}
+	\end{figure}
+		
+		Usando el mismo set de datos uniforme que se uso anteriormente, vemos en la figura \ref{fig:C0_variando_valor_greater} el error de la selectividad pero estimando por mayor. En este caso sucede algo muy parecido a lo que sucede al estimar por menor, con la salvedad de que el de pasos distribuidos no resulta tan constante durante todo el rango.
+		
+		El error del histograma clasico de nuevo es cada ves mayor a medida que se acerca a la media de la normal. 
+		
+		El estimador del grupo en esta ocacion resulto ser casi tan bueno como el de pasos distribuidos. Al parecer tiene una buena performance en los datos con distribuci\'on normal.
+
+			\subsubsection*{Caso 4}
+		
+		\begin{tabular}{| l | l |}
+		\hline
+		Parametro & 20 \\
+		\hline
+		Columna & C0 \\
+		\hline
+		Valor minimo & 0 \\
+		\hline
+		Valor maximo & 999 \\
+		\hline
+		Distribuci\'on & Uniforme, Media = 4950 \\
+		\hline
+		Selectividad de & Mayor \\
+		\hline
+		\end{tabular}		
+
+	\begin{figure}[H]
+	  \begin{center}
+	    %\includegraphics[scale=.41,angle=-90]{imgenes/normal_ejemplo1.png}
+	    \includegraphics[scale=.40]{imagenes/C0_variando_valor_greater.png}
+	    \caption{Errores variando valor a estimar por mayor con parametro fijo} 
+	    \label{fig:C0_variando_valor_greater}
+	  \end{center}
+	\end{figure}	
+
+		En la figura \ref{fig:C0_variando_valor_greater} se realizo un test igual al caso 2, pero esta ves estimando por Mayor enves de por igual. Ya se puede ver como la distribucion es un factor muy importante al momento de utilizar los estimadores.
+		
+		En este caso, el estimador del grupo fue incluso peor que el histograma clasico, y se ve como la diferencia de error aumenta a medida que se acerca al valor mas alto del rango
