@@ -32,49 +32,47 @@ import estimators
 # print "  Sel(>%d) : %3.5f" % (valorGreater, exacto.estimate_greater(valorGreater))
 
 
-# salto = 25
-# valores = [1611,314,2865,-291,-1070]
-# atributo = 'c3'
-# ##~ valores = [60,123,433,666,998]
-# ##~ atributo = 'c1'
-# print "#Buckets;Exacto;Clasico;Steps;Propia;"
-# for numBuckets in range(50,301,salto):
-# 	exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
-# 	aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, numBuckets)
-# 	bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, numBuckets)
-# 	cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, numBuckets)
-# 	for valor in valores:
-# 		print str(numBuckets) + ";" + str(exacto.estimate_equal(valor)) + ";" + str(aEstimator.estimate_equal(valor)) + ";" + str(bEstimator.estimate_equal(valor)) + ";"+ str(cEstimator.estimate_equal(valor)) + ";"
+#~ salto = 10
+#~ valores = [-268,-12,323,699,940]
+#~ atributo = 'c2'
+#~ valores = [32,150,461,704,927]
+#~ atributo = 'c0'
+#~ print "#Buckets;Exacto;Clasico;Steps;Propia;"
+#~ for numBuckets in range(10,201,salto):
+	#~ exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
+	#~ aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, numBuckets)
+	#~ bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, numBuckets)
+	#~ cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, numBuckets)
+	#~ for valor in valores:
+		#~ print str(numBuckets) + ";" + str(exacto.estimate_equal(valor)) + ";" + str(aEstimator.estimate_equal(valor)) + ";" + str(bEstimator.estimate_equal(valor)) + ";"+ str(cEstimator.estimate_equal(valor)) + ";"
 		
-# salto = 40
-# valores = [-1000, -671,250,700,-200,1002, 1500]
-# atributo = 'c2'
-# print "#Buckets;Exacto;Clasico;Steps;Propia;"
-# for numBuckets in range(10,301,salto):
-# 	exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
-# 	aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, numBuckets)
-# 	bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, numBuckets)
-# 	for valor in valores:
-# 		print "Classic Histogram"
-# 		print "  Sel(=%d) : %3.5f" % (valor, aEstimator.estimate_equal(valor))
-# 		print "  Sel(>%d) : %3.5f" % (valor, aEstimator.estimate_greater(valor))
-# 		print "Pasos Distribuidos"
-# 		print "  Sel(=%d) : %3.5f" % (valor, bEstimator.estimate_equal(valor))
-# 		print "  Sel(>%d) : %3.5f" % (valor, bEstimator.estimate_greater(valor))
+salto = 10
+#~ valores = [-671,-402,323,699,940]
+#~ atributo = 'c2'
+valores = [32,150,461,704,927]
+atributo = 'c0'
+print "#Buckets;Exacto;Clasico;Steps;Propia;"
+for numBuckets in range(10,201,salto):
+	exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
+	aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, numBuckets)
+	bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, numBuckets)
+	cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, numBuckets)
+	for valor in valores:
+		print str(numBuckets) + ";" + str(exacto.estimate_greater(valor)) + ";" + str(aEstimator.estimate_greater(valor)) + ";" + str(bEstimator.estimate_greater(valor)) + ";"+ str(cEstimator.estimate_greater(valor)) + ";"
 
-''' Misma columna, mismo parametro, variacion de valor '''
-numBuckets = 20
-atributo = 'c2'
-salto = 50
-min = -700
-max = 1100
-##~ valores = [60,123,433,666,998]
-##~ atributo = 'c1'
-exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
-aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, numBuckets)
-bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, numBuckets)
-cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, numBuckets)
+#~ ''' Misma columna, mismo parametro, variacion de valor '''
+#~ numBuckets = 20
+#~ atributo = 'c2'
+#~ salto = 50
+#~ min = -700
+#~ max = 1100
+#~ ##~ valores = [60,123,433,666,998]
+#~ ##~ atributo = 'c1'
+#~ exacto = estimators.Exacto('db.sqlite3', 'table1', atributo)
+#~ aEstimator = estimators.ClassicHistogram('db.sqlite3', 'table1', atributo, numBuckets)
+#~ bEstimator = estimators.DistributedSteps('db.sqlite3', 'table1', atributo, numBuckets)
+#~ cEstimator = estimators.EstimatorGrupo('db.sqlite3', 'table1', atributo, numBuckets)
 
-print "#Buckets\tExacto\tHisrograma\tSteps\tGrupo"
-for valor in range(min, max, salto):
-	print str(valor) + "\t" + '%f'%exacto.estimate_equal(valor) + "\t" + '%f'%aEstimator.estimate_equal(valor) + "\t" + '%f'%bEstimator.estimate_equal(valor) + "\t" + '%f'%cEstimator.estimate_equal(valor)
+#~ print "#Buckets\tExacto\tHisrograma\tSteps\tGrupo"
+#~ for valor in range(min, max, salto):
+	#~ print str(valor) + "\t" + '%f'%exacto.estimate_equal(valor) + "\t" + '%f'%aEstimator.estimate_equal(valor) + "\t" + '%f'%bEstimator.estimate_equal(valor) + "\t" + '%f'%cEstimator.estimate_equal(valor)

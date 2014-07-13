@@ -134,7 +134,7 @@ class EstimatorGrupo(Estimator):
         for i in range(0,self.cantBuckets):
             self.rangos.append([acum, (acum + self.clasico.anchoBucket)])
             acum = acum + self.clasico.anchoBucket
-        print self.rangos
+        #~ print self.rangos
         conexion = sqlite3.connect(self.db)
         c = conexion.cursor()
         while self.cantBuckets < self.parameter:
