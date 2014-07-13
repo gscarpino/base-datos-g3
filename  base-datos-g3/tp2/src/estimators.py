@@ -77,7 +77,7 @@ class ClassicHistogram(Estimator):
         self.rango = self.max - self.min
 
         self.anchoBucket = self.rango / self.parameter
-        print "min:",self.min," max:",self.max," total:",self.total," rango:",self.rango," ancho:",self.anchoBucket
+        # print "min:",self.min," max:",self.max," total:",self.total," rango:",self.rango," ancho:",self.anchoBucket
         c.execute("Select " + self.column + " From " + self.table + ";")
         fila = c.fetchone()
         while fila != None:
@@ -87,9 +87,9 @@ class ClassicHistogram(Estimator):
             fila = c.fetchone()
         conexion.close()
 
-        print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-        print self.buckets
-        print "Suma: " + str(sum(self.buckets))
+#         print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
+#         print self.buckets
+#         print "Suma: " + str(sum(self.buckets))
 
 
     def estimate_equal(self,value):
