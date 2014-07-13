@@ -77,49 +77,48 @@ class ClassicHistogram(Estimator):
         self.rango = self.max - self.min
 
         self.anchoBucket = self.rango / self.parameter
-        #~ print "min:",self.min," max:",self.max," total:",self.total," rango:",rango," ancho:",self.anchoBucket
+        print "min:",self.min," max:",self.max," total:",self.total," rango:",self.rango," ancho:",self.anchoBucket
         c.execute("Select " + self.column + " From " + self.table + ";")
-        while True:
+        fila = c.fetchone()
+        while fila != None:
+            indice = self.calcularIndice(fila[0])
+            #~ print "b: ",self.parameter," - i: ",indice, " - valor: ", fila[0], " - min: ", self.min
+            self.buckets[indice] += + 1
             fila = c.fetchone()
-            if(fila == None):
-                break
-            else:
-                indice = self.calcularIndice(fila[0])
-                if(len(self.buckets) <= indice):
-                    indice = len(self.buckets) - 1
-                #~ print "b: ",self.parameter," - i: ",indice, " - valor: ", fila[0], " - min: ", self.min
-                self.buckets[indice] = self.buckets[indice] + 1
         conexion.close()
 
-        #print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-        #print self.buckets
-        #print "Suma: " + str(sum(self.buckets))
+        print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
+        print self.buckets
+        print "Suma: " + str(sum(self.buckets))
 
 
     def estimate_equal(self,value):
+        if not self.valueInRange(value):
+            return 0
         indice = self.calcularIndice(value)
-        if(len(self.buckets) <= indice):
-            indice = len(self.buckets) - 1
         return (1.0 * self.buckets[indice] / self.total)
 
     def estimate_greater(self,value):
-        indice = self.calcularIndice(value)
-        if(len(self.buckets) <= indice):
+        if (value > self.max):
             return 0
+        elif (value < self.min):
+            return 1
+        indice = self.calcularIndice(value)
         acumulador = 0
         for i in range(indice+1,len(self.buckets)):
             acumulador = acumulador + self.buckets[i]
         return (1.0 * acumulador / self.total)
         
     def calcularIndice(self, value):
-        indice = 0
-        if self.min < 0 :
-            indice = (abs(self.min) + abs(value)) / self.anchoBucket
-        else:
-            indice = value / self.anchoBucket
-        indice = int(indice)
-        return indice
+        indice = (value - self.min) / self.anchoBucket
+        if (indice >= self.parameter):
+            indice = self.parameter - 1
+        elif (indice < 0):
+            indice = 0
+        return int(indice)
     
+    def valueInRange(self, value):
+        return (value >= self.min) and (self.max >= value) 
 
 #######################################
     
