@@ -166,12 +166,18 @@ class EstimatorGrupo(Estimator):
         
 
     def estimate_equal(self,value):
+	if not ((value >= self.clasico.min) and (self.clasico.max >= value) ):
+		return 0
         indice = self.calcularIndice(value)
         if(self.cantBuckets <= indice):
             indice = self.cantBuckets - 1
         return (1.0 * self.clasico.buckets[indice] / self.clasico.total)
 
     def estimate_greater(self,value):
+	if (value > self.clasico.max):
+		return 0
+	elif (value < self.clasico.min):
+		return 1
         indice = self.calcularIndice(value)
         if(self.cantBuckets <= indice):
             return 0
