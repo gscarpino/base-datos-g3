@@ -1,7 +1,9 @@
-\quad Es fundamental para cualquier motor de bases de datos, poseer un planificador para resolver consultas lo m\'as eficiente posible. Medir el costo de un m\'etodo de evaluaci\'on puede ser muy complejo, pero como se indica en el paper de Piatetsky-Shapiro, aproximadamente son las cantidad de operaciones de entrada y salida que el motor realiza. Por eso mismo, se trata de minimizar estas operaciones.
+\quad Es fundamental para cualquier motor de bases de datos, poseer un planificador para resolver consultas lo m\'as eficiente posible. Medir el costo de un m\'etodo de evaluaci\'on puede ser muy complejo, pero como se indica en el paper de Piatetsky-Shapiro, aproximadamente son las cantidad de operaciones de entrada y salida en disco que el motor realiza. Por eso mismo, se trata de minimizar estas operaciones.
 
-Una de las formas de poder minimizar estas operaciones, es el poder conocer aproximadamente cual puede ser la distribucion de un set de datos, y de esta forma poder estimar cuantas tuplas se obtendar por el echo de aplicar un filtro (WHERE) u otro. El echo de poder minimizar las tuplas resultantes que se obtendran en una consulta, puede hacer que al momento de materializar la misma (por ejemplo en caso de tener que hacer un JOIN posterior) haga que las bajadas a disco de las tuplas se minimize.
 
-Si bien computar la distribucion exacta de un set de datos puede ser muy costoso, existen metodos con el cual se puede aproximar dichas distribuciones y de esa forma poder decidir cual es el mejor camino a seguir al momento de tener que resolver una consulta.
+\quad Una de las formas de poder minimizar estas operaciones, es poder conocer aproximadamente cual puede ser la distribuci\'on de un set de datos, y de esta forma poder estimar cuantas tuplas se obtendr\'a por el hecho de aplicar un filtro (WHERE) u otro. El hecho de poder minimizar las tuplas resultantes que se obtendr\'an en una consulta, puede hacer que al momento de materializar la misma (por ejemplo en caso de tener que hacer un JOIN posterior) haga que las bajadas a disco de las tuplas se minimizen considerablemente.
+
+
+\quad Si bien computar la distribuci\'on exacta de un set de datos puede ser muy costoso, existen m\'etodos con el cual se puede aproximar dichas distribuciones y de esa forma poder decidir cual es el mejor camino a seguir al momento de tener que resolver una consulta.
 
 
