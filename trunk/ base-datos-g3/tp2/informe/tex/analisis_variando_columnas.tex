@@ -4,9 +4,9 @@
 	    \label{fig:variacion_parametro_y_columna_steps}
 \end{figure}
 
-	A continuaci\'on, realizamos un an\'alisis del estimador ``Distributed Steps'', el cual obtuvo los mejores resultados seg\'un nuestros analisis previos.
+	A continuaci\'on, realizamos un an\'alisis del estimador ``Distributed Steps'', el cual obtuvo los mejores resultados seg\'un nuestros an\'alisis previos.
 	
-	En la figura \ref{fig:variacion_parametro_y_columna_steps} se ve un gr\'afico que se realizo utilizando los errores promedio para cada columna, variando a la ves la cantidad de Steps del estimador. Como error promedio considereamos al promedio de los errores obtenidos para los distintas estimaciones de los valores de una misma columna. Una ves teniendo el error promedio para una cantidad de Steps particular y una columna particular, repetimos el proceso variando la cantidad de Steps para todas las columnas.
+	En la figura \ref{fig:variacion_parametro_y_columna_steps} se ve un gr\'afico que se realizo utilizando los errores promedio para cada columna, variando a la ves la cantidad de Steps del estimador. Como error promedio consideramos al promedio de los errores obtenidos para los distintas estimaciones de los valores de una misma columna. Una ves teniendo el error promedio para una cantidad de Steps particular y una columna particular, repetimos el proceso variando la cantidad de Steps para todas las columnas.
 	
 	Se ve como el error promedio de cada columna, en si es muy similar para pocos Steps, pero al aumentar la cantidad de steps, mejora mucho el error, y esta mejor es, en promedio, independiente de la distribucion de la columna, ya que la diferencia de errores entre columnas, es muy chico.
 
@@ -24,11 +24,11 @@
 
 Adicionalmente, se puede ver en las figuras \ref{fig:variacion_parametro_y_columna_histo} y \ref{fig:variacion_parametro_y_columna_grupo} el mismo analisis realizado para Steps, pero esta ves para Histograma clasico y el estimador echo por el grupo respectivamente.
 
-	Comparandolos con el grafico de Steps, a primera vista se ve como en general Steps se comporta mejor un valor del parametro fijo. 
+	Compar\'andolos con el gr\'afico de Steps, a primera vista se ve como en general Steps se comporta mejor considerando un valor del par\'ametro fijo. 
 	
-	A diferencia de el de steps, el histograma clasico no es tan independiente de la distribucion de los datos, se puede ver como para las distintas columnas el error var\'ia bastante. 
+	A diferencia del de steps, el histograma cl\'asico no es tan independiente de la distribuci\'on de los datos, se puede ver como para las distintas columnas el error var\'ia bastante. 
 	
-	En cuanto al estimador del grupo, lo que se puede apreciar es que para algunas columnas, se comporta mejor que el Histograma cl\'asico, y dificilmente se comporta mejor que Steps. Debido a lo analizado anteriormente, sabemos que el estimador del grupo tenia una mejor performance sobre el cl\'asico solo en las distribuciones normales, y en las uniformes los errores no variaban mucho entre uno y otro. Las columnas donde la performance es mejor que en el histograma, son las C2, C3 y C5. En el anexo a este informe, en la carpeta "/tests/Determinar Distribuciones" se encuentran los gr\'aficos de las columnas mencionadas. No fueron incluidos en este informe, debido a que eran demaciados y nos iban a quedar demaciados gr\'aficos.
+	En cuanto al estimador del grupo, lo que se puede apreciar es que para algunas columnas, se comporta mejor que el Histograma cl\'asico, y dif\'icilmente se comporta mejor que Steps. Debido a lo analizado anteriormente, sabemos que el estimador del grupo tenia una mejor performance sobre el cl\'asico solo en las distribuciones normales, y en las uniformes los errores no variaban mucho entre uno y otro. Las columnas donde la performance es mejor que en el histograma, son las C2, C3 y C5. En el anexo a este informe, en la carpeta "/tests/Determinar Distribuciones" se encuentran los gr\'aficos de las columnas mencionadas. No fueron incluidos en este informe, debido a que eran demasiados y nos iban a quedar demasiados gr\'aficos.
 	
-	En esos gr\'aficos, se puede ver como las distribuciones de esas columnas son todas distribuciones normales, por lo que se puede comprobar que nuestro analisis previo, en donde nuestro estimador se comportaba mejor en distribuciones normales, es correcto.
+	En esos gr\'aficos, se puede ver como las distribuciones de esas columnas son todas normales, por lo que se puede comprobar que nuestro an\'alisis previo, en donde nuestro estimador se comportaba mejor en distribuciones normales, es correcto.
 	
