@@ -3,10 +3,8 @@
 # interfaz_bd.py : Implementar las consultas.
 
 import sqlite3
-#conn = sqlite3.connect('C:\\Users\\kotomi\\Desktop\\tp2-bundle.v1\\entregable\\tp2-bundle.v1\\src\\db.sqlite3')
-conn = sqlite3.connect('C:\\Users\\kotomi\\Desktop\\tp2-bundle.v1\\entregable\\tp2-bundle.v1\\src\\midatabase')
+conn = sqlite3.connect('db.sqlite3')
 statement = conn.cursor()
-statement.execute("DROP TABLE personas");
 statement.execute(''' CREATE TABLE personas( DNI INT PRIMARY KEY,  nombre TEXT,  apellido TEXT, edad INT) ''');
 statement.execute(''' CREATE TABLE salarios( ID INT ,salario INT,departamento TEXT, FOREIGN KEY(ID) REFERENCES personas(DNI)) ''');
 statement.execute("INSERT INTO personas VALUES(2091811,'Martin','Celave',63)")
@@ -54,15 +52,15 @@ statement.execute("INSERT INTO personas VALUES(3370923,'Gabi','Fernandez',31)")
 statement.execute("INSERT INTO personas VALUES(2343330,'Gabi','Molina',29)")
 statement.execute("INSERT INTO personas VALUES(2252948,'Gabi','Mendez',21)")
 statement.execute("INSERT INTO personas VALUES(2704906,'Gabi','Mazuce',29)")
-statement.execute("INSERT INTO personas VALUES(2842640,'Foca','Celave',68)")
-statement.execute("INSERT INTO personas VALUES(481145,'Foca','Gonzalez',50)")
-statement.execute("INSERT INTO personas VALUES(1829272,'Foca','Scarpino',18)")
-statement.execute("INSERT INTO personas VALUES(2929590,'Foca','Dabah',70)")
-statement.execute("INSERT INTO personas VALUES(1218076,'Foca','Croce',42)")
-statement.execute("INSERT INTO personas VALUES(3052765,'Foca','Fernandez',23)")
-statement.execute("INSERT INTO personas VALUES(3137463,'Foca','Molina',34)")
-statement.execute("INSERT INTO personas VALUES(3243273,'Foca','Mendez',59)")
-statement.execute("INSERT INTO personas VALUES(589000,'Foca','Mazuce',43)")
+statement.execute("INSERT INTO personas VALUES(2842640,'Javier','Celave',68)")
+statement.execute("INSERT INTO personas VALUES(481145,'Javier','Gonzalez',50)")
+statement.execute("INSERT INTO personas VALUES(1829272,'Javier','Scarpino',18)")
+statement.execute("INSERT INTO personas VALUES(2929590,'Javier','Dabah',70)")
+statement.execute("INSERT INTO personas VALUES(1218076,'Javier','Croce',42)")
+statement.execute("INSERT INTO personas VALUES(3052765,'Javier','Fernandez',23)")
+statement.execute("INSERT INTO personas VALUES(3137463,'Javier','Molina',34)")
+statement.execute("INSERT INTO personas VALUES(3243273,'Javier','Mendez',59)")
+statement.execute("INSERT INTO personas VALUES(589000,'Javier','Mazuce',43)")
 statement.execute("INSERT INTO personas VALUES(1076068,'Pedro','Celave',54)")
 statement.execute("INSERT INTO personas VALUES(2991359,'Pedro','Gonzalez',82)")
 statement.execute("INSERT INTO personas VALUES(2811995,'Pedro','Scarpino',81)")
@@ -176,7 +174,7 @@ statement.execute(" INSERT INTO salarios VALUES(2006073,17862,'finanzas')")
 
 print "las tablas son"
 for row in statement.execute('SELECT * FROM personas'):
-        print row
+    print row
 print "los mayores  35 son"
 for row in statement.execute('SELECT nombre ,apellido  FROM personas  WHERE edad > 35'):
 	print row 
@@ -186,15 +184,14 @@ for row in statement.execute('SELECT id  FROM salarios  WHERE salario> 7000'):
 	print row 
 	
 	
-print " actualizo el apellido de todas las focas(personas llamadas Foca) "
-statement.execute("UPDATE personas SET apellido = 'Bebe' WHERE nombre='Foca' ")
-#lista todas las focas bebe en la base de datos
-print " las focas bebe son "
-for row in statement.execute("SELECT DNI,nombre,apellido  FROM personas  WHERE nombre='Foca' "):
+print " actualizo el apellido de todas las Javiers"
+statement.execute("UPDATE personas SET apellido = 'San Miguel' WHERE nombre='Javier' ")
+
+print " las Javier San Miguel son "
+for row in statement.execute("SELECT DNI,nombre,apellido  FROM personas  WHERE nombre='Javier' "):
 	print row 
 
 statement.execute("DELETE FROM personas WHERE edad <40 ")
-
 for row in statement.execute('SELECT nombre ,apellido  FROM personas  WHERE edad <40'):
 	print row 
 

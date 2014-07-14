@@ -80,20 +80,13 @@ class ClassicHistogram(Estimator):
         if (self.anchoBucket == 0):
             self.parameter = self.rango
             self.anchoBucket = 1
-        # print "min:",self.min," max:",self.max," total:",self.total," rango:",self.rango," ancho:",self.anchoBucket
         c.execute("Select " + self.column + " From " + self.table + ";")
         fila = c.fetchone()
         while fila != None:
             indice = self.calcularIndice(fila[0])
-            #~ print "b: ",self.parameter," - i: ",indice, " - valor: ", fila[0], " - min: ", self.min
             self.buckets[indice] += + 1
             fila = c.fetchone()
         conexion.close()
-
-#         print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-#         print self.buckets
-#         print "Suma: " + str(sum(self.buckets))
-
 
     def estimate_equal(self,value):
         if not self.valueInRange(value):
@@ -129,7 +122,6 @@ class ClassicHistogram(Estimator):
 class EstimatorGrupo(Estimator):
     
     def build_struct(self):
-        #~ self.cantBuckets = self.parameter//2 + self.parameter//4
         self.cantBuckets = self.parameter//2
         self.clasico = ClassicHistogram(self.db, self.table, self.column, self.cantBuckets)
         acum = self.clasico.min
@@ -137,7 +129,6 @@ class EstimatorGrupo(Estimator):
         for i in range(0,self.cantBuckets):
             self.rangos.append([acum, (acum + self.clasico.anchoBucket)])
             acum = acum + self.clasico.anchoBucket
-        #~ print self.rangos
         conexion = sqlite3.connect(self.db)
         c = conexion.cursor()
         while self.cantBuckets < self.parameter:
@@ -157,16 +148,13 @@ class EstimatorGrupo(Estimator):
             self.clasico.buckets.insert(posMax+1,valor1)
             self.clasico.buckets.insert(posMax+2,valor2)
             del self.clasico.buckets[posMax]
-            #~ print self.clasico.buckets
+
             self.cantBuckets = self.cantBuckets + 1
             self.rangos.insert(posMax+1,[minDelBucket,minDelBucket+(self.rangos[posMax][1]-minDelBucket)//2])
             self.rangos.insert(posMax+2,[minDelBucket+((self.rangos[posMax][1]-minDelBucket)//2),self.rangos[posMax][1]])
             del self.rangos[posMax]
-            #~ print self.anchos
+
         conexion.close()
-        #~ print self.clasico.buckets
-        #~ print self.anchos
-        
 
     def estimate_equal(self,value):
 	if not ((value >= self.clasico.min) and (self.clasico.max >= value) ):
@@ -222,9 +210,7 @@ class DistributedSteps(Estimator):
         contador2 = 0
         bucketActual = 0
         temp = 0
-        #testing = [0] * self.parameter
         while True:
-            #testing[bucketActual] = testing[bucketActual] + 1
             fila = c.fetchone()
             if(fila == None):
                 if(not (contador == 0)):
@@ -244,15 +230,8 @@ class DistributedSteps(Estimator):
                         bucketActual = self.parameter - 1
             contador2 = contador2 + 1
         conexion.close()
-        #por las dudas, revisar si hace falta
         self.buckets[0][0] = self.minimo
         self.buckets[len(self.buckets)-1][0] = self.maximo
-        #print "Total: " + str(self.total)
-
-        #print "Parametro: " + str(self.parameter) + " - Ancho: " + str(self.anchoBucket)
-        #print testing
-        #print "Suma: " + str(sum(self.buckets))
-
 
     def estimate_equal(self,value):
         s = 0
@@ -315,12 +294,11 @@ class DistributedSteps(Estimator):
                             s = s + 1
                         resultado = 1.0 - (((1.0 * repeticiones0) - 0.5) / self.parameter)
                     else:
-                        #esta demas
                         resultado = 0    
                 else:
                     if(s == (len(self.buckets)-1)):
                         #si es el último step
-                        #acaaaaaa cae cuando muchos steps
+                        #aca cae cuando muchos steps
                         resultado = 0
 
                     else:
