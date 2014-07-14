@@ -1,0 +1,19 @@
+	\subsection{Discusiones}	
+	
+	Seg\'un los an\'alisis realizados, pudimos comparar el rendimiento de los tests en cuanto a los errores y errores promedio que se cometen, para distintas distribuciones, par\'ametros de los estimadores, valores estimar, y estimando por igualdad o por mayor.
+	
+	Lo que sacamos en claro, es que independientemente de la distribuci\'on de los datos, el estimador ``Distribution Steps'' mantiene un error constante para todos los valores del rango de los datos. En cambio, ``Classic Histogram'', en distribuciones normales, se comporta muy bien (mejor que Distribution Steps) en valores alejados de el desvio standard, pero muy mal para valores al rededor de la media.
+	
+	Para el estimador realizado por nosotros, vimos que para distribuciones normales se comporta igual que Classic Histogram en valores por afuera del desv\'io standard, y mejor que el mismo para valores cercanos a la media. Sin embargo, ``Distribution Steps'' se comporta mejor para estos \'ultimos casos.
+	
+	Para distribuciones uniformes, vimos que en algunos casos el error promedio en ``Classic Histogram'' varia mucho al variar el parametro, al igual que el estimador propio. Incluso vimos algunos casos en donde el error promedio de ``Classic Histogram'' empeora al aumentar el parametro, como por ejemplo se puede ver en los gr\'aficos del as figuras \ref{fig:C0_variando_parametro}, \ref{fig:C0_variando_parametro_greater} y \ref{fig:variacion_parametro_y_columna_histo}.
+	
+	Sin duda, el mas afectador por la distribucion de los datos, fue el estimador propio, el cual se comporta bastante bien para casos en distribuciones normales, como se puede apreciar en los graficos de las figuras \ref{fig:variacion_parametro_y_columna_grupo} (para este grafico ver tambien graficos con distribuciones de las columnas: carpeta ``/tests/Determinar Distribuciones'' ) y \ref{fig:C2_variando_paremetro_greater}. En esta ultima se puede como el estimador propio incluso resulto mejor que ``Distribution Steps''
+	
+	\subsection{Conclusiones}
+	
+	Seg\'un nuestros an\'alisis, concluimos que ``Distribution Steps'' puede resultar un buen estimador cuando no se conoce la distribuci\'on de los datos, ya que de esta forma se puede acotar el error de estimaci\'on de la selectividad a valores bastante bajos y sobre todo constantes para todos los datos.
+		
+	Tambi\'en pudimos ver como realizando una peque\~na mejora a un Histograma Clasico, se pueden obtener resultados interesantes para distribuciones normales, y no tanto para otro tipo de distribuciones.
+	
+	Por ultimo, tambi\'en vimos como hay casos en donde aumentar el par\'ametro demasiado, puede no afectar en nada en los errores, y incluso en los estimadores basados en Histogramas, puede hasta empeorar el error, ademas de aumentar el tiempo de construcci\'on de los mismos. Por lo que siempre es conveniente encontrar un valor de par\'ametro balanceado, que disminuya el error pero que no haga q los tiempos de construcci\'on del estimador no sea demasiado alto.
